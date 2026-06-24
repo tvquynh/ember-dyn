@@ -7,10 +7,10 @@ capability-grounded detection research.
 [![Licence: CC-BY-4.0](https://img.shields.io/badge/dataset%20licence-CC--BY--4.0-green)](https://creativecommons.org/licenses/by/4.0/)
 [![Licence: MIT](https://img.shields.io/badge/code%20licence-MIT-orange)](LICENSE-MIT.txt)
 
-> **This repository includes the full open tier (~116 MB) under `dataset/`** so
-> the notebooks and baselines run out of the box — no external download needed.
-> The controlled-tier Full CAPE reports (~3.0 GB) and the archival Zenodo record
-> are provided separately.
+> **The dataset is released openly under CC-BY-4.0 on Zenodo** (DOI below). This
+> repository is the **code-and-documentation mirror** (code, notebooks, reference
+> baselines, datasheet). Download the Zenodo deposit (or use a provided copy),
+> then unpack it; all data paths in this README are relative to that dataset root.
 
 **Version**: v1.0.0 · **Maintainer**: Van-Quynh Trinh (`quynhtv@ptithcm.edu.vn`) ·
 **Corresponding author**: Van-Quynh Trinh (`quynhtv@ptithcm.edu.vn`)
@@ -27,7 +27,7 @@ modalities that the upstream release does not provide:
 |---|---|---|
 | **Static features** | `dataset/static/*.parquet` + `*.jsonl.zst` | 2,568-dim EMBER feature vector + full raw EMBER JSON record |
 | **Dynamic Small (Avast-CTU 2022 schema)** | `dataset/dynamic/small/*.tar.zst` (~41 MB) | 13 `behavior.summary` keys + a per-sample `apistats` API-call histogram + 23 `static.pe` keys |
-| **Dynamic Full (CAPE report.json)** | `dynamic/full/*.tar.zst` (~3.0 GB, **controlled tier — not in this repo**) | Dynamic CAPE keys (behavior, signatures, network, ttps, …); binary-payload sections (dropped, procdump, procmemory, CAPE.payloads) removed for safety |
+| **Dynamic Full (CAPE report.json)** | `dynamic/full/*.tar.zst` (~3.0 GB, CC-BY-4.0, on Zenodo) | Dynamic CAPE keys (behavior, signatures, network, ttps, …); binary-payload sections (dropped, procdump, procmemory, CAPE.payloads) removed for safety |
 | **Annotations** | `dataset/annotations/*.parquet` | capa capabilities, MITRE ATT&CK techniques, MBC behaviours, APT group |
 
 Behavioural reports with captured execution are available for 9,086 of
@@ -52,11 +52,11 @@ missing dependency or environment mismatch.
 | Splits | train 7,000 · val 997 · test 1,907 · challenge 96 (eval-side near-duplicate-disjoint: test/challenge ≥ TLSH 30 from train+val) |
 | Families | 245 AVClass families (5 primary in Subset A) |
 | Static feature dim | 2,568 (EMBER feature version 3, introduced by EMBER2024) |
-| Manifest columns | 29 full · 26 open (no re-check) · 3 re-check columns controlled |
+| Manifest columns | 29 full (= 26 + 3 aggregate re-check columns); a 26-column variant without re-check is also provided |
 | Static parquet coverage | 10,000 / 10,000 (100%) |
 | Dynamic coverage | 9,086 / 10,000 (90.9%) behaviour; flagged by `dynamic_status` |
 | Annotation parquets | 4 (capa, MITRE, MBC, APT) |
-| Compressed size | open tier ~116 MB · Full dynamic ~3.0 GB (controlled tier) |
+| Compressed size | compact core ~116 MB · Full dynamic reports ~3.0 GB (all CC-BY on Zenodo) |
 | Benchmark tasks predefined | 15 in `task_definitions.json` |
 
 ---
@@ -110,10 +110,10 @@ tar -I zstd -xf dataset/dynamic/small/train.tar.zst -C out_small/
 # Each <sha256>.json: behavior.summary (13 keys) + behavior.apistats + static.pe (23 keys)
 ```
 
-### Decode Full dynamic variant (controlled tier — not in this repo)
+### Decode Full dynamic variant
 
-The Full CAPE reports (~3.0 GB) are controlled-access and are **not** bundled
-in this open repository; request them separately. Once obtained:
+The Full CAPE reports (~3.0 GB) are released openly on Zenodo under CC-BY-4.0.
+After downloading the deposit:
 
 ```bash
 mkdir -p out_full
@@ -146,15 +146,6 @@ ember-dyn/
 ├── LICENSE-MIT.txt                    code licence
 ├── CITATION.cff                       citation metadata
 │
-├── dataset/                           the full OPEN tier (~116 MB, CC-BY-4.0)
-│   ├── manifest_open.csv              26-column registry of all 10,000 samples
-│   ├── splits.json                    train/val/test/challenge membership
-│   ├── task_definitions.json          the 15 pre-defined benchmark tasks
-│   ├── tlsh_leakage.csv               each eval sample's nearest-train TLSH distance
-│   ├── static/                        {train,val,test,challenge}.parquet + .jsonl.zst
-│   ├── dynamic/small/                 {train,val,test,challenge}.tar.zst (Small reports)
-│   └── annotations/                   capa / MITRE / MBC / APT parquets
-│
 ├── baselines/
 │   ├── run_baselines_final.py         reference LightGBM baseline suite (T1–T15 + TD1)
 │   └── results_final.json             the reported baseline numbers
@@ -168,10 +159,12 @@ ember-dyn/
 └── notebooks/                         6 notebooks (overview + 5 quickstarts)
 ```
 
-The full **open tier** is included in this repository under `dataset/`
-(plain Parquet/JSONL — load with pandas/pyarrow, no special tooling). The
-**controlled-tier Full CAPE reports** (~3.0 GB) and the archival **Zenodo
-record** (with a persistent DOI for citation) are provided separately.
+The dataset itself (all artefacts — static parquets and raw JSONL, the Small
+**and** Full CAPE reports, annotation parquets, manifests, splits, task and
+leakage files) is released openly under **CC-BY-4.0** and archived on **Zenodo**
+with a persistent DOI (above). It is plain Parquet/JSON --- load with
+pandas/pyarrow, no special tooling. This repository carries the code,
+documentation, notebooks, and reference baselines that operate on it.
 
 ---
 
@@ -231,8 +224,8 @@ export EMBER_DYN_BASELINES=../dataset          # the open-tier root in this repo
 python run_baselines_final.py                  # produces results_final.json (T1–T15 + TD1 + diversity)
 ```
 
-The suite runs from the open tier: it reads `manifest_open.csv` (the three
-controlled re-check columns are not required for the fifteen benchmark tasks).
+The suite reads `manifest_open.csv` (the three aggregate re-check columns in
+the 29-column `manifest.csv` are not required for the fifteen benchmark tasks).
 
 ---
 
@@ -275,7 +268,7 @@ including the broad-coverage family pool (subset `F`). The released
 re-split; `dataset/manifest_open.csv` is
 the canonical record of the final sample list and its
 train/val/test/challenge assignment (samples are identified by SHA-256;
-the controlled 29-column `manifest.csv` adds the three re-check columns).
+the 29-column `manifest.csv` adds the three aggregate re-check columns).
 Selection is **purposive and
 criterion-based**: each subset is defined by an explicit purpose plus
 an explicit eligibility criterion on EMBER2024 metadata, with
