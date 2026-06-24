@@ -1,0 +1,8 @@
+# Reproducible checksums: never CRLF-convert; data binaries stay byte-stable
+* text=auto eol=lf
+*.parquet binary
+*.jsonl.zst binary
+*.tar.zst binary
+*.zst binary
+*.ipynb text eol=lf
+dataset/checksums.sha256 text eol=lf
