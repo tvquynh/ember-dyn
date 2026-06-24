@@ -1,0 +1,63 @@
+cff-version: 1.2.0
+message: "If you use EMBER-Dyn, please cite both this dataset and the upstream EMBER2024 corpus."
+title: "EMBER-Dyn: A Coordinated Tri-Modal Malware Benchmark for Static, Dynamic, and Capability-Grounded Detection Research"
+doi: "10.5281/zenodo.PLACEHOLDER"
+authors:
+  - family-names: Huynh
+    given-names: Trong-Thua
+    affiliation: "Information Security Technology Lab, Posts and Telecommunications Institute of Technology (PTIT), Vietnam"
+    email: "thuaht@ptit.edu.vn"
+    orcid: "https://orcid.org/0000-0003-3934-1067"
+  - family-names: Huynh
+    given-names: De-Thu
+    affiliation: "School of Computer Science & Engineering, The Saigon International University (SIU), Vietnam"
+    email: "huynhdethu@siu.edu.vn"
+    orcid: "https://orcid.org/0000-0002-1227-0281"
+  - family-names: Nguyen
+    given-names: Minh Thang
+    affiliation: "Faculty of Information Technology, Ho Chi Minh City University of Economics and Finance (UEF), Vietnam"
+    email: "thangnm@uef.edu.vn"
+    orcid: "https://orcid.org/0009-0000-0218-4470"
+  - family-names: Trinh
+    given-names: Van-Quynh
+    affiliation: "Information Security Technology Lab, Posts and Telecommunications Institute of Technology (PTIT), Vietnam"
+    email: "quynhtv@ptithcm.edu.vn"
+    orcid: "https://orcid.org/0009-0006-0514-6123"
+version: "1.0.0"
+date-released: "2026-06-22"
+license: CC-BY-4.0
+type: dataset
+keywords:
+  - malware detection
+  - PE malware
+  - EMBER2024
+  - CAPEv2
+  - dynamic analysis
+  - capa
+  - MITRE ATT&CK
+  - dataset
+  - benchmark
+references:
+  - type: conference-paper
+    title: "EMBER2024 - A Benchmark Dataset for Holistic Evaluation of Malware Classifiers"
+    authors:
+      - family-names: Joyce
+        given-names: Robert J.
+      - family-names: Miller
+        given-names: Gideon
+      - family-names: Roth
+        given-names: Phil
+      - family-names: Zak
+        given-names: Richard
+      - family-names: Zaresky-Williams
+        given-names: Elliott
+      - family-names: Anderson
+        given-names: Hyrum
+      - family-names: Raff
+        given-names: Edward
+      - family-names: Holt
+        given-names: James
+    conference:
+      name: "Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery and Data Mining V.2 (KDD '25)"
+    year: 2025
+    doi: "10.1145/3711896.3737431"

@@ -1,0 +1,29 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+EMBER-Dyn dataset and manuscript (c) 2026 Trong-Thua Huynh, De-Thu Huynh,
+Minh Thang Nguyen, Van-Quynh Trinh.
+
+You are free to:
+  - Share — copy and redistribute the material in any medium or format
+  - Adapt — remix, transform, and build upon the material for any purpose,
+    even commercially.
+
+Under the following terms:
+  - Attribution — You must give appropriate credit, provide a link to the
+    license, and indicate if changes were made.
+
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Citation requirement: any use of EMBER-Dyn must cite the source paper
+(see CITATION.cff) and the upstream EMBER2024 corpus:
+
+  Joyce, R. J., Miller, G., Roth, P., Zak, R., Zaresky-Williams, E.,
+  Anderson, H., Raff, E., & Holt, J. (2025). EMBER2024 - A benchmark
+  dataset for holistic evaluation of malware classifiers. In Proceedings
+  of the 31st ACM SIGKDD Conference on Knowledge Discovery and Data
+  Mining V.2 (KDD '25). https://doi.org/10.1145/3711896.3737431
+
+Scope: this license applies to the dataset artifacts under dataset/ and the
+manuscript artifacts under paper/. It does NOT apply to:
+  - Code under code/ — see LICENSE-MIT.txt
+  - PE binaries under pe_local/ — PRIVATE, not redistributable
