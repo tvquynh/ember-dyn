@@ -3,8 +3,9 @@
 A coordinated static-dynamic malware benchmark with capability-grounded
 annotations.
 
-**Zenodo archival release:** forthcoming. The archival DOI will be added before
-manuscript submission.
+**Zenodo archival DOI:** [10.5281/zenodo.22178427](https://doi.org/10.5281/zenodo.22178427).
+The Zenodo record is currently a draft. Public archival release is scheduled
+immediately before manuscript submission.
 [![Licence: CC-BY-4.0](https://img.shields.io/badge/dataset%20licence-CC--BY--4.0-green)](https://creativecommons.org/licenses/by/4.0/)
 [![Licence: MIT](https://img.shields.io/badge/code%20licence-MIT-orange)](LICENSE-MIT.txt)
 
@@ -145,19 +146,12 @@ MLP-PyTorch, Random Forest, TF-IDF+LightGBM dynamic).
 ```
 ember-dyn/
 ├── README.md                          this file
+├── DATASHEET.md                       Gebru-style datasheet
 ├── LICENSE-CC-BY-4.0.txt              dataset licence
 ├── LICENSE-MIT.txt                    code licence
 ├── CITATION.cff                       citation metadata
 │
-├── paper/
-│   ├── manuscript/                    LaTeX manuscript source
-│   │   ├── main.tex / main.pdf
-│   │   ├── sections/02..08_*.tex
-│   │   ├── figures/ (6 PDF figures + generate_figures.py)
-│   │   ├── baselines/                 results_final.json + run_baselines_final.py
-│   │   └── references.bib
-│   ├── DATASHEET.md                   Gebru-style datasheet
-│   └── cover_letter.md
+├── baselines/                         frozen results, runner, and vocabularies
 │
 ├── code/
 │   ├── README.md
@@ -168,8 +162,9 @@ ember-dyn/
 └── notebooks/                         6 Colab notebooks (overview + 5 quickstarts)
 ```
 
-The final compressed core archive (~92 MB) and Full reports (~3.0 GB) are
-prepared for an archival Zenodo record. The archival DOI will be added before
+The final compressed core archive (approximately 92 MB) and Full reports
+(approximately 3.0 GB) are prepared for the Zenodo record associated with DOI
+`10.5281/zenodo.22178427`. The draft will be published immediately before
 manuscript submission. The core uses plain Parquet/JSONL and loads with
 pandas/pyarrow.
 
@@ -277,9 +272,8 @@ criterion-based**: each subset is defined by an explicit purpose plus
 an explicit eligibility criterion on EMBER2024 metadata, with
 proportional stratification across families and time buckets. Where
 the eligible pool exceeds the target count, samples are drawn by
-descending AVClass `family_confidence`. See
-`paper/manuscript/sections/03_methods.tex` for the full methodology and
-`code/RUNBOOK.md` for the step-by-step rebuild.
+descending AVClass `family_confidence`. See the accompanying manuscript for the
+full methodology and `code/RUNBOOK.md` for the step-by-step rebuild.
 
 Reproducing the dynamic variants additionally requires raw PE binaries
 plus a CAPEv2 + KVM/libvirt sandbox deployment. We do not redistribute
@@ -381,7 +375,6 @@ evaluation in controlled environments.
   the upstream **Apache-2.0** licence of EMBER2024 and are redistributed with
   attribution. See the Zenodo deposit licence files (`LICENSE-CC-BY-4.0.txt`, `LICENSE-Apache-2.0.txt`) for the per-artefact licence/provenance.
 - **Code** (everything under `code/`): MIT
-- **Manuscript** (everything under `paper/`): CC-BY-4.0 (post-publication)
 - **PE binaries**: not redistributed; see Section 7
 
 ---
@@ -395,7 +388,7 @@ evaluation in controlled environments.
   author  = {Trinh, Van-Quynh and Huynh, Trong-Thua and Huynh, De-Thu
              and Nguyen, Minh Thang},
   year    = {2026},
-  note    = {Zenodo archival release forthcoming; DOI to be added before manuscript submission}
+  doi     = {10.5281/zenodo.22178427}
 }
 ```
 

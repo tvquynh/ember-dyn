@@ -149,8 +149,9 @@ test/challenge splits).
   and re-check coverage and are annotated by the `note` column.
 
 **Is the dataset self-contained?**
-Yes for the three primary modalities (parquet, JSONL, CAPE Reduced) and all
-annotations. The original PE binaries are NOT redistributed (neither is the
+Yes for the released static and dynamic representations and the
+capability-grounded annotation layer. The original PE binaries are NOT
+redistributed (neither is the
 upstream EMBER2024, which publishes only features, metadata, and hashes);
 researchers needing raw bytes re-acquire them by hash from public
 malware-sharing sources using the SHA-256 identifiers in the manifest, e.g. via
@@ -219,7 +220,9 @@ Raw CAPE reports (including dropped binaries, memory dumps, pcaps) are not retai
 in the release due to storage constraints (see Limitations).
 
 **Is the preprocessing software publicly available?**
-Yes, MIT-licensed at `github.com/tvquynh/ember-dyn`.
+The MIT-licensed software is maintained at `github.com/tvquynh/ember-dyn`. The
+repository is currently private and will be made public immediately before
+manuscript submission.
 
 ---
 
@@ -262,14 +265,15 @@ Apache-2.0 licence with attribution. See the deposit `LICENSE-CC-BY-4.0.txt` and
 `LICENSE-Apache-2.0.txt` (NOTICE) for the per-artefact licence/provenance.
 
 **How will it be distributed?**
-- The Zenodo archival release is forthcoming. Its DOI will be added before
-  manuscript submission.
+- The canonical archival release is associated with Zenodo DOI
+  `10.5281/zenodo.22178427`. The Zenodo record is currently a draft and will be
+  made public immediately before manuscript submission.
 - GitHub is the code and documentation host. The repository remains private
   during preparation and will be made public before manuscript submission.
 
 **When will it be distributed?**
-Release timing and publication authorization remain author-controlled. The
-archival Zenodo DOI will be added before manuscript submission.
+The Zenodo record and GitHub repository will be made public immediately before
+manuscript submission.
 
 **Is the dataset subject to any IP-based restrictions?**
 Both licences require attribution: CC-BY-4.0 to the EMBER-Dyn authors for the
@@ -284,8 +288,10 @@ artefacts. The re-check fields are released as aggregate detection counts only
 
 **Who will support, host, and maintain the dataset?**
 The PTIT research team at the contact `quynhtv@ptit.edu.vn` and
-`thuaht@ptit.edu.vn`. Planned Zenodo and GitHub hosting must be confirmed by the
-authors before release.
+`thuaht@ptit.edu.vn`. The canonical archival release is associated with Zenodo
+DOI `10.5281/zenodo.22178427`. Code and documentation are maintained in the
+EMBER-Dyn GitHub repository, which is currently private and will be made public
+immediately before manuscript submission.
 
 **Will the dataset be updated?**
 The initial release is v1.0.0. We will issue patch releases for verified errors;
