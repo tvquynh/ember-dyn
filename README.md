@@ -6,8 +6,12 @@ annotations.
 **Zenodo archival DOI:** [10.5281/zenodo.22178427](https://doi.org/10.5281/zenodo.22178427).
 The Zenodo record is currently a draft. Public archival release is scheduled
 immediately before manuscript submission.
-[![Licence: CC-BY-4.0](https://img.shields.io/badge/dataset%20licence-CC--BY--4.0-green)](https://creativecommons.org/licenses/by/4.0/)
-[![Licence: MIT](https://img.shields.io/badge/code%20licence-MIT-orange)](LICENSE-MIT.txt)
+[![EMBER-Dyn-original: CC-BY-4.0](https://img.shields.io/badge/EMBER--Dyn--original-CC--BY--4.0-green)](https://creativecommons.org/licenses/by/4.0/)
+[![EMBER2024-derived: Apache-2.0](https://img.shields.io/badge/EMBER2024--derived-Apache--2.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Code: MIT](https://img.shields.io/badge/code-MIT-orange)](LICENSE-MIT.txt)
+
+License scope is artifact-specific: EMBER-Dyn-original artifacts use
+CC-BY-4.0, EMBER2024-derived artifacts retain Apache-2.0, and code uses MIT.
 
 **Version**: v1.0.0 · **Maintainer**: Van-Quynh Trinh (`quynhtv@ptit.edu.vn`) ·
 **Corresponding author**: Trong-Thua Huynh (`thuaht@ptit.edu.vn`)
@@ -20,7 +24,7 @@ EMBER-Dyn is a **10,000-sample** purposively curated subset of the EMBER2024
 benchmark corpus (Joyce *et al.*, KDD 2025). It coordinates two measured views
 and a semantic annotation layer:
 
-| Modality | Files | Description |
+| Release component | Files | Description |
 |---|---|---|
 | **Static features** | `dataset/static/*.parquet` + `*.jsonl.zst` | 2,568-dim EMBER feature vector + full raw EMBER JSON record |
 | **Dynamic Small (Avast-CTU 2022 schema)** | `dataset/dynamic/small/*.tar.zst` (~41 MB) | 13 `behavior.summary` keys + a per-sample `apistats` API-call histogram + 23 `static.pe` keys |
@@ -382,13 +386,16 @@ evaluation in controlled environments.
 ## 12. Citation
 
 ```bibtex
-@article{trinh2026emberdyn,
-  title   = {EMBER-Dyn: A Coordinated Static-Dynamic Benchmark with
-             Capability-Grounded Annotations for Malware Analysis},
-  author  = {Trinh, Van-Quynh and Huynh, Trong-Thua and Huynh, De-Thu
-             and Nguyen, Minh Thang},
-  year    = {2026},
-  doi     = {10.5281/zenodo.22178427}
+@dataset{trinh2026emberdyn,
+  author    = {Trinh, Van-Quynh and Huynh, Trong-Thua and
+               Huynh, De-Thu and Nguyen, Minh Thang},
+  title     = {EMBER-Dyn: A Coordinated Static-Dynamic Benchmark with
+               Capability-Grounded Annotations for Malware Analysis},
+  year      = {2026},
+  publisher = {Zenodo},
+  version   = {1.0.0},
+  doi       = {10.5281/zenodo.22178427},
+  url       = {https://doi.org/10.5281/zenodo.22178427}
 }
 ```
 
