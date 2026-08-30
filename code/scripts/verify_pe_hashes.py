@@ -135,11 +135,11 @@ def main():
         issues_phase2.append(f"  manifest XOR all-PE: {len(diff_manifest_pe)} mismatched sha256")
 
     if issues_phase2:
-        print("  FAIL — set-equality issues found:")
+        print("  FAIL: set-equality issues found:")
         for line in issues_phase2:
             print(line)
     else:
-        print("  PASS — all set-equality checks (parquet = JSONL = PE files = manifest)")
+        print("  PASS: all set-equality checks (parquet = JSONL = PE files = manifest)")
 
     print(f"  (phase 2: {time.time() - p2:.1f}s)")
 
@@ -224,25 +224,25 @@ def main():
     print(f"  Filename matches actual hash: "
           f"{total_files - len(name_mismatches):,} / {total_files:,}")
     if name_mismatches:
-        print(f"  FAIL — {len(name_mismatches)} files where filename != actual hash:")
+        print(f"  FAIL: {len(name_mismatches)} files where filename != actual hash:")
         for split, stem, actual, size in name_mismatches[:20]:
             print(f"    {split}/{stem}.bin  size={size}  actual={actual}")
         if len(name_mismatches) > 20:
             print(f"    . and {len(name_mismatches) - 20} more")
     else:
-        print("  PASS — every PE filename matches its actual SHA-256")
+        print("  PASS: every PE filename matches its actual SHA-256")
 
     print()
     print("PHASE 4  Cross-modality consistency:")
     if not parquet_only and not jsonl_only:
-        print("  PASS — actual hashes match parquet and JSONL sha256 records exactly")
+        print("  PASS: actual hashes match parquet and JSONL sha256 records exactly")
     else:
         if parquet_only:
-            print(f"  FAIL — parquet sha256 not found in actual hashes:")
+            print(f"  FAIL: parquet sha256 not found in actual hashes:")
             for s, n, sample in parquet_only:
                 print(f"    [{s}]: {n} mismatches; sample: {sample}")
         if jsonl_only:
-            print(f"  FAIL — JSONL sha256 not found in actual hashes:")
+            print(f"  FAIL: JSONL sha256 not found in actual hashes:")
             for s, n, sample in jsonl_only:
                 print(f"    [{s}]: {n} mismatches; sample: {sample}")
 

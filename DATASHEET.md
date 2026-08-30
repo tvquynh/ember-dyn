@@ -7,8 +7,8 @@ Following the template proposed by Gebru et al., "Datasheets for Datasets" (CACM
 ## Motivation
 
 **For what purpose was the dataset created?**
-EMBER-Dyn was created to provide the malware-detection research community with the
-first compact public corpus, to our knowledge, combining static portable-executable features, raw EMBER
+EMBER-Dyn was created to provide the malware-detection research community with a
+compact coordinated benchmark combining static portable-executable features, raw EMBER
 JSON records, and CAPEv2 sandbox dynamic behavioural reports for the same 10,000 PE
 samples, joined with capa/MITRE ATT&CK/MBC annotations and structured around 15
 pre-defined benchmark tasks.
@@ -19,7 +19,10 @@ Technology (PTIT), the Saigon International University (SIU), and the Ho Chi Min
 City University of Economics and Finance (UEF), Vietnam.
 
 **Who funded the dataset creation?**
-PTIT institutional resources. No external funding.
+The accompanying paper does not declare a separate research grant or grant
+identifier. It acknowledges institutional support with the statement: "This
+research was supported by the Posts and Telecommunications Institute of
+Technology (PTIT), Vietnam."
 
 ---
 
@@ -37,9 +40,11 @@ manifest row (20 EMBER2024-inherited columns, 6 EMBER-Dyn curation columns, and
 test (1,907), challenge (96).
 
 **Does the dataset contain all possible instances or a sample?**
-Sample. The EMBER2024 source corpus has 3,238,315 instances; EMBER-Dyn samples 0.3%
-via deterministic, criterion-based purposive selection (no random component) to maximise multi-task utility at
-minimum download cost.
+Sample. The EMBER2024 source corpus has 3,238,315 instances; EMBER-Dyn contains a
+deterministic, criterion-based purposive sample of 10,000 coordinated records. It is
+not a probability sample or a statistically representative miniature of EMBER2024.
+The exact intermediate eligible and submitted-candidate denominators cannot be
+reconstructed from the release artifacts alone.
 
 **What data does each instance consist of?**
 Static feature vector (2,568 numerical features), raw EMBER JSON (hierarchical
@@ -48,8 +53,8 @@ data directories, rich header, authenticode, capa matches, ATT&CK matches, MBC
 matches), CAPE Reduced JSON (`behavior.summary` 13 string lists, a per-sample
 `apistats` API-call histogram, and `static.pe` 23 structural keys), and 29 manifest
 columns (including `recheck_label`, `recheck_detections`, `recheck_date` from the
-Q1-2026 re-check; the per-sample re-check fields and the failed-detonation list are
-provided under controlled access, not in the open CC-BY layer).
+Q1-2026 re-check; the re-check fields are released as aggregate detection
+counts only, not per-engine VirusTotal results).
 
 **Is there a label or target?**
 Yes. Each sample carries:
@@ -61,18 +66,19 @@ Yes. Each sample carries:
 - `subset`, `subset_class`, `note` curation fields
 - `dyn_split` train/val/test/challenge assignment
 - `time_bucket` pre/post 2024-09
-- `dynamic_status` behavior / no_behavior (captured-execution flag)
+- `dynamic_status` behavior / no_behavior (report-content observation flag)
 
 **Is any information missing?**
-Several capa-derived fields are sparse by design (1.1% exploit, 2.2% APT group). The
+Several capa-derived fields are sparse by design (1.1% exploit, 2.2% group tags). The
 `family` field is empty for benign samples (label=0) and for some low-confidence
-malicious samples. Behavioural reports with captured execution are available for
-9,086 of the 10,000 samples (90.9%); the remaining 914 produced a valid but
-behaviourally empty report under the single sandbox configuration and are flagged by
-the `dynamic_status` column (static features and all annotations are present for every
-sample). These missing values are documented in the schema.
+malicious samples. Reports with non-empty behavioral summary or API-count content are
+available for 9,086 of the 10,000 samples (90.86%); the remaining 914 have no such
+observed content under the single sandbox configuration and are flagged by the
+`dynamic_status` column. This flag does not establish whether a sample executed.
+Static features and annotations remain available for every release sample. These
+missing values are documented in the schema.
 
-Behavioural-capture coverage by subset (share of each subset with
+Observed-content coverage by subset (share of each subset with
 `dynamic_status == behavior`):
 
 | Subset | Behaviour / total | Coverage |
@@ -86,31 +92,56 @@ Behavioural-capture coverage by subset (share of each subset with
 | E3 (non-UPX packer)    |   175 / 191   | 91.6% |
 | F (broad-coverage)     |   438 / 483   | 90.7% |
 | Challenge              |    84 / 96    | 87.5% |
-| **All**                | **9,086 / 10,000** | **90.9%** |
+| **All**                | **9,086 / 10,000** | **90.86%** |
 
-E2 (APT-attributed) shows markedly lower capture (39.5%): these older, often
-targeted samples are the most prone to anti-analysis bail-out or unmet
-environmental preconditions under the single Windows 10 22H2 / INetSim / 5-minute
-configuration.
+E2 group-tagged samples show lower observed-content coverage (39.55%). The available
+records do not establish a cause. Challenge/T15 positives have 87.50% coverage and
+T15 negatives have 91.33% coverage. Coverage is 98.52% for .NET, 94.67% for Win32,
+and 77.53% for Win64. Associations between availability and subset and between
+availability and file type have Cramer's V values of 0.2449 and 0.2603,
+respectively.
 
 **Are relationships between instances made explicit?**
 No explicit relationships. Each instance is treated as independent.
 
 **Are there recommended data splits?**
-Yes — train (7,000), val (997), test (1,907), challenge (96). Researchers
-should follow the discipline described in the Usage Notes section of the paper.
+Yes. The recommended splits are train (7,000), validation (997), test (1,907),
+and challenge (96). Researchers
+should follow the split discipline described in the accompanying data descriptor
+and `task_definitions.json` (evaluate only on the near-duplicate-disjoint
+test/challenge splits).
 
 **Are there errors, sources of noise, or redundancies?**
 - AVClass family labels carry inherent multi-engine disagreement noise; the
   `family_confidence` field documents this per sample.
 - The `first_submission_date` and `last_analysis_date` columns are stored as
-  Unix epoch seconds (numeric), not ISO strings — convert with
+  Unix epoch seconds (numeric), not ISO strings. Convert with
   `pd.to_datetime(col, unit='s')`.
+- The `dynamic_status == 'behavior'` flag marks a report with a non-empty
+  `behavior.summary` **or** a non-empty `apistats` histogram (the manifest rule);
+  most have both, ~57 have a summary but empty `apistats`, and 66 have `apistats`
+  but an empty summary. Check `len(apistats) > 0` when building API-histogram
+  features to avoid silently collecting zero-vectors.
+- The reference T5 baseline learns 19,152 TF-IDF features and 322 API-count
+  features from training data only, for 19,474 columns total. The fitted
+  vocabulary is released under `baselines/artifacts/`; this learned size is not
+  an immutable dataset dimension.
+- The annotation parquets retain occurrence multiplicity. The fine label
+  columns are largely distinct (`capa.capability` 0% duplicate; `mbc.behavior`
+  ≈12%; `mitre.technique` ≈37%), while the coarse grouping columns
+  (`namespace`/`tactic`/`objective`) repeat heavily (≈19–68%). De-duplicate on
+  whichever column you count or group by before presence/count/frequency
+  analysis. The manifest `caps_list`/`ttps_list`/`mbc_list` columns are already
+  distinct.
 - Detection-ratio is a snapshot from `last_analysis_date`. The Q1-2026 re-check
-  measures how much labels drift: 99.7% of labels are stable over a median 17-month gap (range 9-27 months).
-  This 99.7% is the pooled rate, (8,112+1,855)/10,000 = 99.67% (8,112/8,126 = 99.8% malicious remain >=5
-  detections; 1,855/1,874 = 99.0% benign remain 0); the pooled figure is higher than the benign per-class
-  rate because malicious samples dominate the corpus. The inherited labels are thus temporally robust for this subset.
+  provides a second, dated aggregate detection count per sample over a median
+  17-month gap (range 9-27 months). Under a three-state endpoint comparison,
+  9,967/10,000 (99.67%) retain their original benign or malicious endpoint
+  without entering grayware, 29/10,000 (0.29%) enter grayware, and 4/10,000
+  (0.04%) cross directly between benign and malicious endpoints. Under the
+  separate binary rule of at least five detections as malicious, 9,984/10,000
+  (99.84%) remain on the same side and 16 change sides. These counts do not
+  establish ground-truth label correctness or absence of drift.
 - One duplicate SHA-256 in the EMBER2024 test parquet was deduplicated during
   EMBER-Dyn assembly.
 - The 483 samples in subset `F` are a broad-coverage criterion-based draw from
@@ -119,8 +150,13 @@ should follow the discipline described in the Usage Notes section of the paper.
 
 **Is the dataset self-contained?**
 Yes for the three primary modalities (parquet, JSONL, CAPE Reduced) and all
-annotations. The original PE binaries are NOT redistributed; researchers needing
-raw bytes must obtain them through the EMBER2024 release channel.
+annotations. The original PE binaries are NOT redistributed (neither is the
+upstream EMBER2024, which publishes only features, metadata, and hashes);
+researchers needing raw bytes re-acquire them by hash from public
+malware-sharing sources using the SHA-256 identifiers in the manifest, e.g. via
+the `code/scripts/fetch_binaries.py` helper (MalwareBazaar free API, with a
+VirusTotal premium fallback). Coverage is partial and skewed against the benign
+and long-tail cells.
 
 **Does the dataset contain confidential data?**
 No. All samples are public malware/benign hashes already published in EMBER2024.
@@ -139,35 +175,39 @@ should treat the dataset as containing potentially offensive textual artefacts.
 - Static features and metadata: inherited from EMBER2024 clean-week parquet
   (Joyce et al. 2025).
 - Raw EMBER JSON: inherited from EMBER2024 clean-week JSONL.
-- CAPE Reduced JSON: produced by detonating each sample in a CAPEv2 sandbox on
-  isolated infrastructure (Methods section).
+- CAPE Reduced JSON: derived from locally available CAPE reports. Project
+  documentation describes isolated infrastructure; the release does not include
+  operational network logs that independently verify isolation for every run.
 - capa/MITRE/MBC annotations: inherited from EMBER2024 clean-week parquet.
 
 **What mechanisms were used to collect the data?**
 EMBER2024 itself collected samples via VirusTotal and partner antivirus
-backends. EMBER-Dyn sampling is a deterministic Python script
-(`scripts/sample_ember_dyn.py`). Dynamic detonation uses CAPEv2 v2.5 against
-Windows 10 22H2 Enterprise Evaluation guest VMs.
+backends. EMBER-Dyn sampling is implemented in a deterministic Python script
+(`scripts/sample_ember_dyn.py`). A structured spot check of 12 locally available
+Full reports records CAPEv2 2.5. Project documentation describes Windows 10 22H2
+Enterprise Evaluation guests under KVM/QEMU/libvirt, 12 virtual machines, a
+300-second budget, and INetSim; these infrastructure details are not independently
+recoverable from the reduced release records.
 
 **Who was involved in the collection process?**
 The four authors of this paper.
 
 **Over what timeframe was the data collected?**
 The underlying EMBER2024 source samples were collected between 2023-09-24 and
-2024-12-14. EMBER-Dyn sample curation was finalised ahead of the Q1-2026
-re-check; dynamic detonation was performed in 2025–2026.
-
-**Were any ethical review processes conducted?**
-The dataset contains only published malware/benign hashes. No human-subject
-research is involved. PTIT does not require ethical review for this type of
-dataset preparation.
+2024-12-14. EMBER-Dyn sample curation was finalized ahead of the Q1-2026
+re-check. Timestamps in 12 inspected Full reports span 2026-05-23 to 2026-05-28;
+the available report sample does not establish the complete dynamic-analysis date
+range.
 
 ---
 
 ## Preprocessing / Cleaning / Labelling
 
 **Was any preprocessing/cleaning/labelling done?**
-- EMBER2024 metadata was joined to the 136,611 SHA-256 hashes available on disk.
+- Construction records identify 136,611 SHA-256 hashes available on disk, but the
+  corresponding candidate frame is not present in the release. This number documents
+  a construction-stage record rather than a reproducible denominator for the final
+  selection flow.
 - Detection_ratio was already pre-parsed to float in clean-week parquet.
 - One duplicate SHA-256 in the test parquet was deduplicated.
 - CAPE reports were extracted in the Avast-CTU Reduced schema (`behavior.summary` +
@@ -186,14 +226,16 @@ Yes, MIT-licensed at `github.com/tvquynh/ember-dyn`.
 ## Uses
 
 **Has the dataset been used for any tasks already?**
-Baseline binary detection, family classification, drift, open-set, and capa
-multi-label tasks (Technical Validation section).
+Baseline binary detection, family classification, temporal separability, open-set, and capa
+multi-label tasks (reference baselines in the code repository).
 
 **What other tasks could the dataset be used for?**
 The 15 pre-defined tasks cover binary detection, multi-class family, drift,
 open-set detection, few-shot meta-learning, packer fingerprinting, exploit
-detection, APT attribution, capa/MITRE/MBC multi-label, per-architecture
-detection, capability count regression, and time-distinct benchmarking.
+detection, exploratory weak-label group-tag prediction, capa/MITRE/MBC multi-label,
+per-architecture detection, capability count regression, and time-distinct
+benchmarking. The challenge-malware versus test-benign task is a
+source-split-confounded stress comparison, not a canonical out-of-distribution test.
 Further uses include adversarial robustness studies, transfer learning to other
 PE corpora, hierarchical multi-instance learning research, and threat-intelligence
 classifier studies.
@@ -210,36 +252,40 @@ classifier studies.
 ## Distribution
 
 **Will the dataset be distributed?**
-Yes, in two tiers. The **open tier** (CC-BY-4.0) holds the 26-column open
-manifest, splits, task definitions, static parquets, raw EMBER JSONL,
-annotation parquets, and the Small dynamic variant. The **controlled-access
-tier** (data-use agreement, not redistributable) holds the three per-sample
-re-check columns, the `failed_detonation_samples.json` artefact, and the Full
-CAPE report variant. See the per-artefact licence/provenance matrix in the
-manuscript Data Records section.
+The release is prepared as a single archive containing both manifests (26-column and 29-column with the
+aggregate re-check fields), `manifest_recheck.csv`, splits, task definitions,
+static parquets, raw EMBER JSONL, annotation parquets, the Small **and** Full
+CAPE report variants, and the `failed_detonation_samples.json` artefact.
+EMBER-Dyn-original artefacts are licensed CC-BY-4.0; EMBER2024-derived artefacts
+(static parquets, raw JSONL, capa/MITRE/MBC annotations) retain the upstream
+Apache-2.0 licence with attribution. See the deposit `LICENSE-CC-BY-4.0.txt` and
+`LICENSE-Apache-2.0.txt` (NOTICE) for the per-artefact licence/provenance.
 
 **How will it be distributed?**
-- Zenodo: archival copy of record (persistent DOI; open tier + file-level checksums). The open tier is plain Parquet/JSONL and loads directly with pandas/pyarrow after download.
-- Controlled tier: access request + affiliation-verified data-use agreement
-- GitHub: code mirror + small reference files
+- The Zenodo archival release is forthcoming. Its DOI will be added before
+  manuscript submission.
+- GitHub is the code and documentation host. The repository remains private
+  during preparation and will be made public before manuscript submission.
 
 **When will it be distributed?**
-Open tier deposited on Zenodo at submission (DOI reserved); public on acceptance.
+Release timing and publication authorization remain author-controlled. The
+archival Zenodo DOI will be added before manuscript submission.
 
 **Is the dataset subject to any IP-based restrictions?**
-Open-tier CC-BY-4.0 requires attribution to the EMBER-Dyn authors and the
-upstream EMBER2024 corpus. Controlled-tier artefacts (re-check, Full reports,
-failed-detonation list) are not redistributable. Raw PE binaries are not
-distributed under either tier.
+Both licences require attribution: CC-BY-4.0 to the EMBER-Dyn authors for the
+original artefacts, and the upstream Apache-2.0 (with attribution to the
+EMBER2024 corpus and retention of its NOTICE) for the EMBER2024-derived
+artefacts. The re-check fields are released as aggregate detection counts only
+(not per-engine VirusTotal results). Raw PE binaries are not distributed.
 
 ---
 
 ## Maintenance
 
 **Who will support, host, and maintain the dataset?**
-The PTIT research team at the contact `quynhtv@ptithcm.edu.vn` and
-`thuaht@ptit.edu.vn`. Zenodo provides persistent archival hosting; GitHub
-provides version control.
+The PTIT research team at the contact `quynhtv@ptit.edu.vn` and
+`thuaht@ptit.edu.vn`. Planned Zenodo and GitHub hosting must be confirmed by the
+authors before release.
 
 **Will the dataset be updated?**
 The initial release is v1.0.0. We will issue patch releases for verified errors;
@@ -250,4 +296,5 @@ configurations) will be versioned as v2.x.
 The dataset contains no personal information.
 
 **Will older versions be supported?**
-Older versions remain accessible through the Zenodo DOI versioning system.
+The intended versioning policy uses the archival record's versioning mechanism;
+availability of older versions depends on the final author-approved deposit.

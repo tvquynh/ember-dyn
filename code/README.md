@@ -1,4 +1,4 @@
-# EMBER-Dyn — code
+# EMBER-Dyn code
 
 MIT-licensed build pipeline and analysis utilities for the EMBER-Dyn dataset.
 
@@ -9,6 +9,8 @@ code/
 ├── README.md              this file
 ├── RUNBOOK.md             end-to-end rebuild guide
 ├── requirements.txt
+├── requirements-results-environment.txt
+├── RESULTS_ENVIRONMENT.md
 └── scripts/
     ├── sample_ember_dyn.py            purposive curation entry point
     ├── copy_pe.py                     parallel PE-file copier
@@ -17,6 +19,7 @@ code/
     ├── rebuild_parquet_v2.py          schema extension to v2
     ├── verify_staging.py              build-staging structural verifier
     ├── verify_release.py              downloader-side released-bundle verifier
+    ├── fetch_binaries.py              optional: re-acquire raw PE by SHA-256 (MalwareBazaar/VirusTotal)
     ├── full_inventory.py              descriptive statistics + plots
     ├── dataset_statistics.py
     ├── compress_jsonl.py              JSONL → JSONL.zst
@@ -32,7 +35,7 @@ code/
 The five Colab quickstart notebooks (`01_quickstart_lightgbm.ipynb` …
 `05_quickstart_textcape_lgbm.ipynb`) ship at the repository root
 `notebooks/` directory. The LightGBM baseline training script that
-produced the reported baseline tables is at
+produced the manuscript's Tables and Figure 6 is at
 `../baselines/run_baselines_final.py`.
 
 ## Dependencies
@@ -63,9 +66,13 @@ pip install -r requirements.txt
 # sample_ember_dyn.py reads the EMBER2024 clean-week parquet splits from
 # ./data/ember2024/parquet/ (ember2024_{train,test,challenge}.parquet) and
 # writes the purposive-selection manifest. It documents the initial selection
-# criteria only; the released dataset/manifest_open.csv is the canonical record of
+# criteria only; the released dataset/manifest.csv is the canonical record of
 # the final 10,000-sample list (including subset F and the TLSH re-split).
 python scripts/sample_ember_dyn.py --output manifest.csv --seed 42
 ```
 
 See `RUNBOOK.md` for the complete step-by-step rebuild pipeline.
+
+For verification of the stored targeted benchmark results, use the recorded
+environment in `requirements-results-environment.txt` and the synchronized
+protocol and vocabulary artifacts described in `RESULTS_ENVIRONMENT.md`.

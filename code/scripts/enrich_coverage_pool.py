@@ -9,7 +9,7 @@ and the manifest was never synced to the metadata the parquets already held
 This script sources the four missing fields from the EMBER2024 clean-week
 JSONL (authoritative upstream), writes them into the static parquets, syncs
 the manifest from the parquets, and regenerates the four long-form annotation
-parquets so that all 10,000 samples have uniform tri-modal + annotation
+parquets so that all 10,000 samples have coordinated static and dynamic views plus annotation
 coverage.
 
 Run on the host that holds jsonl_clean-week (Windows dev copy).

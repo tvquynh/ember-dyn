@@ -1,4 +1,4 @@
-"""Phase 3 — Filter clean-week parquet (3 ember splits) → 4 dyn-split parquets.
+"""Phase 3: filter clean-week parquet (three EMBER splits) into four dyn-split parquets.
 
 For each ember_subset (train/test/challenge), load the parquet and gather
 matching sha256s, routing each to the proper dyn_split (train/val/test/challenge).

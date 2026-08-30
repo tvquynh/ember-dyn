@@ -5,7 +5,7 @@ EMBER2024 release.
 
 ## Prerequisites
 
-- Access to the EMBER2024 clean-week parquet (train, test, challenge) — published
+- Access to the EMBER2024 clean-week parquet (train, test, challenge), published
   at <https://github.com/FutureComputing4AI/EMBER2024>.
 - Access to the EMBER2024 raw JSONL (per-week files).
 - Python ≥ 3.10 with `pandas`, `pyarrow`, `numpy`, `scikit-learn`, `lightgbm`,
@@ -15,7 +15,7 @@ EMBER2024 release.
   documentation at <https://github.com/kevoreilly/CAPEv2>).
 - For raw bytes: VirusTotal Premium access, institutional malware-sharing
   arrangements (MalwareBazaar, MalShare), or direct contact with the EMBER2024
-  team — needed only by the dynamic-detonation step, not for sample selection.
+  team. These sources are needed only by the dynamic-detonation step, not for sample selection.
 
 ## Pipeline steps
 
@@ -112,7 +112,7 @@ tar+zstd at compression level 19.
 ### 7. PII redaction on dynamic tarballs
 
 Apply the best-effort PII filter to every Small and Full tarball
-before release. The filter is deterministic — re-running it on the
+before release. The filter is deterministic when re-run on the
 same raw reports produces an identical redacted bundle.
 
 ```bash
@@ -153,7 +153,7 @@ checks run in `verify_release.py` on the published bundle, not here.)
 `verify_staging.py` runs against the build-staging layout. For a downloader who
 only has the published bundle, `scripts/verify_release.py` re-runs the
 checksum, manifest-count, parquet-schema, annotation-count, and split-coverage
-checks directly on the released open-tier files:
+checks directly on the released files:
 
 ```bash
 python scripts/verify_release.py /path/to/dataset
@@ -174,9 +174,20 @@ export EMBER_DYN_BASELINES=../dataset
 python ../baselines/run_baselines_final.py
 ```
 
-The script writes `results_final.json`, containing the T1–T15 +
-TD1 + diversity numbers reported in the manuscript's Technical
-Validation section.
+The script writes `results_final.json`, containing the T1-T15, TD1, and
+diversity results reported in the manuscript's Technical Validation section.
+For T5, it fits the TF-IDF and API-count vocabularies on train only, uses
+validation for early stopping and for selection among the four declared fusion
+rules, freezes the selected `0.7 * static + 0.3 * dynamic` rule, and evaluates
+test once. The same fitted models and frozen rule are reused for T15. T9 uses a
+fixed six-class label universe and `zero_division=0`. Metrics produced by
+`average_precision_score` are labeled Average Precision (AP).
+
+The environment recorded for the stored targeted results is pinned in
+`requirements-results-environment.txt`; see `RESULTS_ENVIRONMENT.md`. A fresh
+environment reproduction was not performed while assembling the submission
+candidate. The fitted dynamic-vocabulary artifact contains 19,152 TF-IDF and
+322 API-count features, 19,474 total, and records train-only fitting.
 
 ## Estimated total runtime
 

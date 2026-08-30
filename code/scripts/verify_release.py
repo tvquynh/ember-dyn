@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """verify_release.py - self-contained integrity check for the *published*
-EMBER-Dyn open-tier bundle (no build-staging layout required).
+EMBER-Dyn open release (no build-staging layout required).
 
 Usage:
     python verify_release.py /path/to/dataset
 
 Re-runs checksum, manifest-count, parquet-schema, annotation-count,
 split-coverage, and PII-residual checks directly on the released files. Exits
-non-zero on any failure. The open tier is always checked; the controlled tier
-(controlled_checksums.sha256, dynamic/full) is checksum-verified when present.
-The open-tier dynamic reports are scanned for analyzer-account / guest-SID
-residual (separator-agnostic); pass --deep to also content-scan the multi-GB
-controlled Full tier.
+non-zero on any failure. Every released file (including the Full reports under
+dynamic/full) is checksum-verified against checksums.sha256. The Small dynamic
+reports are scanned for analyzer-account / guest-SID residual
+(separator-agnostic); pass --deep to also content-scan the multi-GB Full
+reports.
 """
 from __future__ import annotations
 
@@ -173,24 +173,15 @@ def main(root_str: str, deep: bool = False) -> int:
     elif not _zstd:
         chk("zstandard available for PII scan", False, "pip install zstandard")
 
-    # 9. controlled tier — checksum-verified when present; content-scanned with --deep
-    cc = root / "controlled_checksums.sha256"
-    if cc.exists():
-        bad = []
-        for line in cc.read_text(encoding="utf-8").splitlines():
-            if " *" not in line:
-                continue
-            digest, rel = line.split(" *", 1)
-            fp = root / rel.lstrip("./")
-            if not fp.exists() or sha256_file(fp) != digest.strip():
-                bad.append(rel)
-        chk("controlled_checksums.sha256 verifies", not bad, f"{len(bad)} mismatched/missing")
-        full_dir = root / "dynamic" / "full"
-        if deep and _zstd and full_dir.is_dir():
-            c, s, n, _ = _scan_tier(full_dir)
-            chk("controlled Full: members == 10000", n == EXPECT["rows"], str(n))
-            chk("controlled Full: no analyzer-account residual", c == 0, f"{c} reports")
-            chk("controlled Full: no guest-SID residual", s == 0, f"{s} reports")
+    # 9. Full reports are covered by checksums.sha256 (section 1) and content-scanned with --deep.
+    full_dir = root / "dynamic" / "full"
+    if deep and _zstd and full_dir.is_dir():
+        c, s, n, _ = _scan_tier(full_dir)
+        chk("Full reports: members == 10000", n == EXPECT["rows"], str(n))
+        chk("Full reports: no analyzer-account residual", c == 0, f"{c} reports")
+        chk("Full reports: no guest-SID residual", s == 0, f"{s} reports")
+    elif deep and not _zstd:
+        chk("zstandard available for Full PII scan", False, "pip install zstandard")
 
     # report
     npass = sum(1 for _, ok, _ in checks if ok)

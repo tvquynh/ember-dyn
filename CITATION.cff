@@ -1,16 +1,20 @@
 cff-version: 1.2.0
 message: "If you use EMBER-Dyn, please cite both this dataset and the upstream EMBER2024 corpus."
-title: "EMBER-Dyn: A Coordinated Tri-Modal Malware Benchmark for Static, Dynamic, and Capability-Grounded Detection Research"
-doi: "10.5281/zenodo.PLACEHOLDER"
+title: "EMBER-Dyn: A Coordinated Static-Dynamic Benchmark with Capability-Grounded Annotations for Malware Analysis"
 authors:
+  - family-names: Trinh
+    given-names: Van-Quynh
+    affiliation: "Information Security Technology Laboratory, Posts and Telecommunications Institute of Technology (PTIT), Vietnam"
+    email: "quynhtv@ptit.edu.vn"
+    orcid: "https://orcid.org/0009-0006-0514-6123"
   - family-names: Huynh
     given-names: Trong-Thua
-    affiliation: "Information Security Technology Lab, Posts and Telecommunications Institute of Technology (PTIT), Vietnam"
+    affiliation: "Information Security Technology Laboratory, Posts and Telecommunications Institute of Technology (PTIT), Vietnam"
     email: "thuaht@ptit.edu.vn"
     orcid: "https://orcid.org/0000-0003-3934-1067"
   - family-names: Huynh
     given-names: De-Thu
-    affiliation: "School of Computer Science & Engineering, The Saigon International University (SIU), Vietnam"
+    affiliation: "School of Computer Science and Engineering, The Saigon International University (SIU), Vietnam"
     email: "huynhdethu@siu.edu.vn"
     orcid: "https://orcid.org/0000-0002-1227-0281"
   - family-names: Nguyen
@@ -18,25 +22,19 @@ authors:
     affiliation: "Faculty of Information Technology, Ho Chi Minh City University of Economics and Finance (UEF), Vietnam"
     email: "thangnm@uef.edu.vn"
     orcid: "https://orcid.org/0009-0000-0218-4470"
-  - family-names: Trinh
-    given-names: Van-Quynh
-    affiliation: "Information Security Technology Lab, Posts and Telecommunications Institute of Technology (PTIT), Vietnam"
-    email: "quynhtv@ptithcm.edu.vn"
-    orcid: "https://orcid.org/0009-0006-0514-6123"
 version: "1.0.0"
-date-released: "2026-06-22"
-license: CC-BY-4.0
+license:
+  - CC-BY-4.0
+  - Apache-2.0
 type: dataset
 keywords:
   - malware detection
   - PE malware
-  - EMBER2024
   - CAPEv2
   - dynamic analysis
   - capa
   - MITRE ATT&CK
-  - dataset
-  - benchmark
+  - behavioural sandbox reports
 references:
   - type: conference-paper
     title: "EMBER2024 - A Benchmark Dataset for Holistic Evaluation of Malware Classifiers"

@@ -10,3 +10,5 @@ zstandard>=0.22
 tqdm>=4.65
 matplotlib>=3.7
 py-tlsh>=4.5  # import name: tlsh; only to re-implement the TLSH near-duplicate re-split (no shipped script imports it)
+requests>=2.31  # optional: binary-retrieval helper (scripts/fetch_binaries.py) only
+pyzipper>=0.3   # optional: extract AES-encrypted malware ZIPs in scripts/fetch_binaries.py

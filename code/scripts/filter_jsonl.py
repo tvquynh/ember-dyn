@@ -1,4 +1,4 @@
-"""Phase 4 — Filter all clean-week JSONL files into 4 dyn-split JSONL outputs.
+"""Phase 4: filter all clean-week JSONL files into four dyn-split JSONL outputs.
 
 Streams every .jsonl in ./data/ember2024/jsonl/, parses sha256 from each
 line, and routes matched lines into one of train/val/test/challenge outputs.

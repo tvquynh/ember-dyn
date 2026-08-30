@@ -1,0 +1,259 @@
+{
+  "T1": {
+    "name": "Binary detection",
+    "description": "Classify malicious (label=1) vs benign (label=0).",
+    "feature_source": "static_parquet",
+    "target_column": "label",
+    "target_format": "single_label",
+    "n_classes": 2,
+    "subset_filter": null,
+    "split_name": "default",
+    "metrics": [
+      "AUC",
+      "F1"
+    ]
+  },
+  "T2": {
+    "name": "Family multi-class (5-way)",
+    "description": "Classify 5 known families in Subset A.",
+    "feature_source": "static_parquet",
+    "target_column": "subset_class",
+    "target_format": "single_label",
+    "n_classes": 5,
+    "classes": [
+      "berbew",
+      "cosmu",
+      "expiro",
+      "xmrig",
+      "virlock"
+    ],
+    "subset_filter": "subset == 'A'",
+    "split_name": "default",
+    "metrics": [
+      "macro_F1"
+    ]
+  },
+  "T3": {
+    "name": "Temporal separability diagnostic (pre- vs post-2024-09)",
+    "description": "Discriminate pre-2024-09 from post-2024-09 samples (time_bucket classification) on the standard split. This is a temporal distribution-shift diagnostic, not an estimate of detector performance under concept drift.",
+    "feature_source": "static_parquet",
+    "target_column": "time_bucket",
+    "target_format": "single_label",
+    "n_classes": 2,
+    "subset_filter": null,
+    "split_name": "default",
+    "metrics": [
+      "ROC_AUC",
+      "F1"
+    ]
+  },
+  "T4": {
+    "name": "Open-set detection (Subset A known vs. B novel families)",
+    "description": "Open-set / novel-family detection. Fit a multi-class classifier on the Subset A known families (splits.json key T4_open_set: known_train=3826, known_val=546), then at test time score the held-out known_test (987 Subset-A samples) against the test-window Subset B novel-family partition (267 samples; n_unknown=267) using maximum-softmax-probability and free-energy OOD scores. Subset A and Subset B share no AVClass family, so B functions as out-of-distribution. splits.json key T4_open_set also records the full 1359-sample Subset B unknown_pool; the reference baseline scores the 267 test-window members for split-consistency with the other tasks, and scoring the full 1359-sample pool changes AUROC by under 0.001.",
+    "feature_source": "static_parquet",
+    "target_column": "subset_class",
+    "target_format": "single_label_with_ood",
+    "n_classes": 5,
+    "subset_filter": "subset in ['A', 'B']",
+    "split_name": "T4_open_set",
+    "metrics": [
+      "AUROC",
+      "FPR_at_95pct_TPR"
+    ]
+  },
+  "T5": {
+    "name": "Validation-selected static-dynamic late fusion",
+    "description": "Fit static and dynamic LightGBM models on train with validation early stopping. Build the TF-IDF and API vocabularies on train only. Select among mean, 0.7 static + 0.3 dynamic, geometric mean, and maximum by validation ROC AUC; freeze the selected rule before one test evaluation. Structurally empty no_behavior reports are represented by an all-zero dynamic row.",
+    "feature_source": "static_parquet + dynamic_cape_reduced",
+    "target_column": "label",
+    "target_format": "single_label",
+    "n_classes": 2,
+    "subset_filter": null,
+    "split_name": "default",
+    "metrics": [
+      "ROC_AUC",
+      "Average_Precision",
+      "paired_bootstrap_difference_vs_static"
+    ],
+    "selection_split": "val",
+    "selected_fusion_rule": "0.7 static + 0.3 dynamic",
+    "test_used_for_selection": false
+  },
+  "T6": {
+    "name": "Few-shot family (N=5, K in {5,10})",
+    "description": "Episodic few-shot evaluation over 8 ultra-rare families in Subset C.",
+    "feature_source": "static_parquet",
+    "target_column": "family",
+    "target_format": "single_label",
+    "n_classes": 8,
+    "subset_filter": "subset == 'C'",
+    "split_name": "T6_few_shot",
+    "metrics": [
+      "episodic_accuracy"
+    ],
+    "params": {
+      "N": 5,
+      "K_values": [
+        5,
+        10
+      ],
+      "episodes_per_K": 50,
+      "query_samples_per_class": 5,
+      "seed": 42,
+      "method": "prototype 1-NN on raw static features"
+    }
+  },
+  "T7": {
+    "name": "Non-UPX packer detection",
+    "description": "Binary detection of samples carrying a non-UPX packer signature (489 positives) vs samples with no packer signature (9,430 negatives). Labels derive from the EMBER2024 'packer' field, NOT from subset membership; the 81 UPX-only samples are excluded so the negative class is clean. Subset E3 is a curated 191-sample slice of the positives and is not itself the task label.",
+    "feature_source": "static_parquet",
+    "target_column": "packer",
+    "target_format": "binary_derived",
+    "target_rule": "positive iff packer list contains any entry != 'upx'; negative iff packer list is empty; exclude UPX-only samples",
+    "n_classes": 2,
+    "n_positive": 489,
+    "n_negative": 9430,
+    "subset_filter": null,
+    "split_name": "T7_packer",
+    "metrics": [
+      "AUC",
+      "F1"
+    ]
+  },
+  "T8": {
+    "name": "Exploit / CVE detection",
+    "description": "Binary detection of exploit-bearing samples (111 positives, exploit field non-empty) vs samples with no exploit (9,889 negatives). Labels derive from the EMBER2024 'exploit' field, NOT from subset membership; Subset E1 is a curated 109-sample slice of the positives and is not itself the task label.",
+    "feature_source": "static_parquet",
+    "target_column": "exploit",
+    "target_format": "binary_derived",
+    "target_rule": "positive iff exploit list is non-empty; negative otherwise",
+    "n_classes": 2,
+    "n_positive": 111,
+    "n_negative": 9889,
+    "subset_filter": null,
+    "split_name": "T8_exploit",
+    "metrics": [
+      "AUC",
+      "F1"
+    ]
+  },
+  "T9": {
+    "name": "Exploratory weak-label APT group-tag prediction (6-way)",
+    "description": "Single-label prediction over the 177 samples in Subset E2 into six weak, capa-derived group-tag buckets in subset_class. This is not validated threat-actor attribution. Training combines train and validation (145 samples); evaluation uses 32 test samples. Macro-F1 is computed over the fixed ordered six-class universe with zero_division=0. The test split has no apt_molerats sample and one apt_knotweed sample, so the result is an exploratory diagnostic with severe support limitations.",
+    "feature_source": "static_parquet",
+    "target_column": "subset_class",
+    "target_format": "single_label",
+    "n_classes": 6,
+    "classes": [
+      "apt_equationgroup",
+      "apt_gamaredon",
+      "apt_knotweed",
+      "apt_molerats",
+      "apt_turla",
+      "apt_other"
+    ],
+    "subset_filter": "subset == 'E2'",
+    "split_name": "T9_apt",
+    "metrics": [
+      "macro_F1_fixed_six_class"
+    ],
+    "scoring_labels": "all six ordered classes",
+    "zero_division": 0
+  },
+  "T10": {
+    "name": "Capa capability multi-label",
+    "description": "Predict the 579 distinct capa capabilities (caps_list column).",
+    "feature_source": "static_parquet",
+    "target_column": "caps_list",
+    "target_format": "multi_label",
+    "n_classes": 579,
+    "subset_filter": null,
+    "split_name": "default",
+    "metrics": [
+      "macro_F1"
+    ],
+    "evaluation_policy": "keep training labels with at least 10 positives; split them into frequency thirds; train one binary model per evaluable label; fixed probability threshold 0.5 on test; no threshold selection"
+  },
+  "T11": {
+    "name": "MITRE ATT&CK TTP multi-label",
+    "description": "Predict the 96 distinct MITRE ATT&CK techniques (ttps_list column).",
+    "feature_source": "static_parquet",
+    "target_column": "ttps_list",
+    "target_format": "multi_label",
+    "n_classes": 96,
+    "subset_filter": null,
+    "split_name": "default",
+    "metrics": [
+      "macro_F1"
+    ],
+    "evaluation_policy": "keep training labels with at least 10 positives; split them into frequency thirds; train one binary model per evaluable label; fixed probability threshold 0.5 on test; no threshold selection"
+  },
+  "T12": {
+    "name": "MBC behaviour multi-label",
+    "description": "Predict the 186 distinct MBC behaviours (mbc_list column).",
+    "feature_source": "static_parquet",
+    "target_column": "mbc_list",
+    "target_format": "multi_label",
+    "n_classes": 186,
+    "subset_filter": null,
+    "split_name": "default",
+    "metrics": [
+      "macro_F1"
+    ],
+    "evaluation_policy": "keep training labels with at least 10 positives; split them into frequency thirds; train one binary model per evaluable label; fixed probability threshold 0.5 on test; no threshold selection"
+  },
+  "T13": {
+    "name": "Per-architecture detector (Win32/Win64/.NET)",
+    "description": "Train per-architecture binary detector; report AUC per file_type.",
+    "feature_source": "static_parquet",
+    "target_column": "label",
+    "target_format": "single_label",
+    "n_classes": 2,
+    "subset_filter": "file_type in ['Win32', 'Win64', 'Dot_Net']",
+    "split_name": "T13_per_arch",
+    "metrics": [
+      "AUC_per_file_type"
+    ]
+  },
+  "T14": {
+    "name": "Capability count regression",
+    "description": "Regress total capa+TTP+MBC capability count per sample.",
+    "feature_source": "static_parquet",
+    "target_column": "derived: len(caps_list) + len(ttps_list) + len(mbc_list)",
+    "target_format": "regression",
+    "n_classes": null,
+    "subset_filter": null,
+    "split_name": "default",
+    "metrics": [
+      "MAE",
+      "R_squared"
+    ]
+  },
+  "T15": {
+    "name": "Challenge-malware versus test-benign detection",
+    "description": "Evaluate the T5-fitted static model, dynamic model, and validation-selected frozen 0.7 static + 0.3 dynamic rule on 96 challenge-malware positives and 392 test-benign negatives. T15 is never used for model fitting, early stopping, fusion selection, or tuning. Class is confounded with source split, so this is not a canonical out-of-distribution or confirmed-evasion benchmark. The all-sample analysis encodes no_behavior as an all-zero dynamic row; behavior-complete results are a sensitivity analysis.",
+    "feature_source": "static_parquet + dynamic_cape_reduced",
+    "target_column": "label",
+    "target_format": "binary_detection_with_source_split_confounding",
+    "n_classes": 2,
+    "subset_filter": "positives: dyn_split == 'challenge'; negatives: dyn_split == 'test' and label == 0",
+    "split_name": "T15_challenge",
+    "metrics": [
+      "Average_Precision",
+      "ROC_AUC",
+      "paired_bootstrap_difference_vs_static"
+    ],
+    "primary_cohort": {
+      "total": 488,
+      "positive": 96,
+      "negative": 392
+    },
+    "complete_case_sensitivity": {
+      "total": 442,
+      "positive": 84,
+      "negative": 358
+    },
+    "fusion_rule": "frozen from T5 validation; 0.7 static + 0.3 dynamic",
+    "T15_used_for_selection_or_tuning": false
+  }
+}

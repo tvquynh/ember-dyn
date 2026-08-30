@@ -1,4 +1,4 @@
-"""Phase 0 — Purposively sample the EMBER-Dyn subset from the EMBER2024 PE corpus.
+"""Phase 0: purposively sample the EMBER-Dyn subset from the EMBER2024 PE corpus.
 
 Strategy:
   Subset A  = 5 known families x 1,200 = 6,000  (conf>=0.7, det>=0.5)

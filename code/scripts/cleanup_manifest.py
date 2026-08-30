@@ -1,4 +1,4 @@
-"""Cleanup manifest.csv — drop 5 legacy columns to match paper claim (24 cols).
+"""Cleanup manifest.csv by dropping five superseded columns.
 
 Legacy columns dropped:
   - det_ratio     (replaced by detection_ratio)
@@ -43,7 +43,7 @@ for c in ["caps_list", "ttps_list", "mbc_list"]:
         lambda v: json.dumps(list(v)) if v is not None else "[]"
     )
 
-# Merge by sha256 (left join — manifest is authoritative)
+# Merge by sha256; the manifest is authoritative for the left join.
 df = df.merge(extra_df, on="sha256", how="left")
 
 # Reorder to canonical 24-col schema (paper Table 3)

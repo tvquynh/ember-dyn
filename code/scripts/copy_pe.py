@@ -1,4 +1,4 @@
-"""Phase 2 — Copy 10,481 PE binaries from EMBER source to ember-dyn staging.
+"""Phase 2: copy 10,481 PE binaries from EMBER source to ember-dyn staging.
 
 Source: ./data/pe/{train,test,challenge}/<sha256>
 Dest:   ./output/staging/pe/{train,val,test,challenge}/<sha256>

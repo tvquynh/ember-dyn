@@ -1,9 +1,17 @@
 {
+  "artifact": {
+    "title": "EMBER-Dyn synchronized baseline results",
+    "protocol_version": "EMBER-Dyn v1.0 synchronized protocol",
+    "created_from_stored_results": true,
+    "additional_model_training": false,
+    "runner_sha256": "E677F00A0CD108DF32732B231AB496B611141F92576DFBE01ABFD9F255E98BA4",
+    "metric_naming": "Average Precision denotes sklearn.metrics.average_precision_score."
+  },
   "T1_binary_detection": {
     "roc_auc_mean": 0.9984996969084664,
     "roc_auc_std": 0.0,
-    "pr_auc_mean": 0.9996060028505441,
-    "pr_auc_std": 0.0,
+    "average_precision_mean": 0.9996060028505441,
+    "average_precision_std": 0.0,
     "f1_mean": 0.9898126848504765,
     "f1_std": 0.0,
     "n_seeds": 5,
@@ -61,23 +69,11 @@
     ],
     "n_test": 987
   },
-  "T3_concept_drift": {
-    "roc_auc_mean": 0.8553345090190948,
-    "roc_auc_std": 1.1102230246251565e-16,
-    "pr_auc_mean": 0.8682859179354457,
-    "pr_auc_std": 0.0,
-    "f1_mean": 0.7364787111622555,
-    "f1_std": 0.0,
-    "n_seeds": 5,
-    "n_train": 7000,
-    "n_test": 1907,
-    "positive_rate_test": 0.4855794441531201
-  },
   "T7_packer_nonupx": {
     "roc_auc_mean": 0.9981015410395917,
     "roc_auc_std": 1.1102230246251565e-16,
-    "pr_auc_mean": 0.972755977222284,
-    "pr_auc_std": 1.1102230246251565e-16,
+    "average_precision_mean": 0.972755977222284,
+    "average_precision_std": 1.1102230246251565e-16,
     "f1_mean": 0.9029126213592233,
     "f1_std": 0.0,
     "n_seeds": 5,
@@ -90,8 +86,8 @@
   "T8_exploit": {
     "roc_auc_mean": 0.9906181989294748,
     "roc_auc_std": 1.1102230246251565e-16,
-    "pr_auc_mean": 0.8640879743262564,
-    "pr_auc_std": 1.1102230246251565e-16,
+    "average_precision_mean": 0.8640879743262564,
+    "average_precision_std": 1.1102230246251565e-16,
     "f1_mean": 0.7741935483870968,
     "f1_std": 0.0,
     "n_seeds": 5,
@@ -99,19 +95,6 @@
     "n_test": 1907,
     "positive_rate_test": 0.009438909281594127,
     "n_positive_corpus": 111
-  },
-  "T9_apt_6way": {
-    "macro_f1": 0.144,
-    "n_train": 145,
-    "n_test": 32,
-    "classes": [
-      "apt_equationgroup",
-      "apt_gamaredon",
-      "apt_knotweed",
-      "apt_molerats",
-      "apt_turla",
-      "apt_other"
-    ]
   },
   "T4_openset_A_vs_B": {
     "auroc_msp": 0.9991879451597357,
@@ -143,42 +126,6 @@
     "mae": 5.5619494256056905,
     "r2": 0.8435327095547589,
     "mean_count_test": 24.19926586261143
-  },
-  "T15_challenge_ood": {
-    "pr_auc": 0.5151461075380579,
-    "roc_auc": 0.8582057823129252,
-    "f1": 0.3472222222222222,
-    "pr_auc_ci95": [
-      0.42352980662818807,
-      0.6254847301370157
-    ],
-    "n_challenge": 96,
-    "n_benign": 392,
-    "positive_rate": 0.19672131147540983
-  },
-  "TD1_dynamic_only": {
-    "roc_auc": 0.9877121640735502,
-    "pr_auc": 0.9959093302012928,
-    "f1": 0.9720416124837451,
-    "feat_dim": 19351,
-    "apistats_dim": 322
-  },
-  "T5_hybrid_fusion": {
-    "roc_static_only": 0.9984996969084664,
-    "roc_dynamic_only_aligned": 0.9877121640735502,
-    "best_variant": "max",
-    "roc_best_fusion": 0.9987253317168452,
-    "fusion_minus_static_ci95": [
-      -0.00022546719286222484,
-      0.000728471526088972
-    ],
-    "n_test_aligned": 1907,
-    "variants_roc": {
-      "mean": 0.9977907994881121,
-      "wstatic0.7": 0.997960867515323,
-      "geom": 0.9974388765407154,
-      "max": 0.9987253317168452
-    }
   },
   "T6_fewshot_C": {
     "method": "prototype 1-NN raw features",
@@ -253,44 +200,44 @@
   "diversity_T1": {
     "lightgbm": {
       "roc_auc": 0.9984996969084664,
-      "pr_auc": 0.9996060028505441,
+      "average_precision": 0.9996060028505441,
       "f1": 0.9898126848504765
     },
     "xgboost": {
       "roc_auc": 0.9986933387216272,
-      "pr_auc": 0.999661433046612,
+      "average_precision": 0.999661433046612,
       "f1": 0.9898126848504765
     },
     "randomforest": {
       "roc_auc": 0.9977352327069441,
-      "pr_auc": 0.9994011061379837,
+      "average_precision": 0.9994011061379837,
       "f1": 0.9885358663609565
     },
     "mlp": {
       "roc_auc": 0.9830496059810062,
-      "pr_auc": 0.9903423732423768,
+      "average_precision": 0.9903423732423768,
       "f1": 0.982640026203734
     }
   },
   "diversity_T7": {
     "lightgbm": {
       "roc_auc": 0.9981015410395918,
-      "pr_auc": 0.9727559772222839,
+      "average_precision": 0.9727559772222839,
       "f1": 0.9029126213592233
     },
     "xgboost": {
       "roc_auc": 0.9981704794934615,
-      "pr_auc": 0.9707429324145633,
+      "average_precision": 0.9707429324145633,
       "f1": 0.8846153846153846
     },
     "randomforest": {
       "roc_auc": 0.9968261796430048,
-      "pr_auc": 0.9586187294511688,
+      "average_precision": 0.9586187294511688,
       "f1": 0.8844221105527639
     },
     "mlp": {
       "roc_auc": 0.9798964862600359,
-      "pr_auc": 0.9162345803830745,
+      "average_precision": 0.9162345803830745,
       "f1": 0.845771144278607
     }
   },
@@ -333,5 +280,621 @@
     "challenge_intra_split_min_tlsh_distance": 15,
     "per_eval_sample_nearest_train_distance_file": "tlsh_leakage.csv",
     "note": "Three identical-TLSH groups, all on the train+val side (two wholly within train, one spanning train and val); none cross into test or challenge."
+  },
+  "T3_temporal_separability": {
+    "roc_auc_mean": 0.8553345090190948,
+    "roc_auc_std": 1.1102230246251565e-16,
+    "average_precision_mean": 0.8682859179354457,
+    "average_precision_std": 0.0,
+    "f1_mean": 0.7364787111622555,
+    "f1_std": 0.0,
+    "n_seeds": 5,
+    "n_train": 7000,
+    "n_test": 1907,
+    "interpretation": "temporal distribution-shift diagnostic, not detector robustness under drift"
+  },
+  "T5_hybrid_fusion": {
+    "script_sha256": "A43C3EABD9B0F372F60C6C9F11C2F693864B1CAFEEB1465731C7041AB48A09E3",
+    "seed": 42,
+    "bootstrap_seed": 20260829,
+    "bootstrap_replicates": 5000,
+    "bootstrap_method": "class-stratified paired percentile bootstrap",
+    "model_parameters": {
+      "boosting_type": "gbdt",
+      "num_leaves": 64,
+      "min_data_in_leaf": 100,
+      "learning_rate": 0.05,
+      "n_estimators": 500,
+      "n_jobs": -1,
+      "verbosity": -1,
+      "objective": "binary"
+    },
+    "feature_dimensions": {
+      "static": 2568,
+      "dynamic_tfidf": 19152,
+      "dynamic_apistats": 322,
+      "dynamic_total": 19474
+    },
+    "model_best_iterations": {
+      "static": 207,
+      "dynamic": 141
+    },
+    "train_count": 7000,
+    "validation_count": 997,
+    "test_count": 1907,
+    "training_vocabulary_only": true,
+    "training_sha_list_digest": "8C4AFC0BD26E57C36EB12CD43AF41B77552A4841BC9410CFEAAEAFE24A6D7AC8",
+    "validation_sha_list_digest": "EB3BCB1FFD16F1588F2DDF070938C653558F3D59321FF6F6114EE6209FDE7CCA",
+    "test_sha_list_digest": "708523BB2F3897B0C50A356608AD84613632172C1F638E55553CF59D1A35C52A",
+    "validation_fusion_metrics": [
+      {
+        "fusion_rule": "mean",
+        "roc_auc": 0.9991219766500665,
+        "average_precision": 0.9998115271635919,
+        "selected": false
+      },
+      {
+        "fusion_rule": "wstatic0.7",
+        "roc_auc": 0.9993894993894993,
+        "average_precision": 0.9998698192842167,
+        "selected": true
+      },
+      {
+        "fusion_rule": "geom",
+        "roc_auc": 0.999286606028179,
+        "average_precision": 0.9998446329479679,
+        "selected": false
+      },
+      {
+        "fusion_rule": "max",
+        "roc_auc": 0.9992248700113869,
+        "average_precision": 0.9998229419469862,
+        "selected": false
+      }
+    ],
+    "selected_fusion_rule": "wstatic0.7",
+    "test_metrics": {
+      "S": {
+        "roc_auc": 0.9984996969084664,
+        "average_precision": 0.9996060028505441
+      },
+      "D": {
+        "roc_auc": 0.9868129925237421,
+        "average_precision": 0.9956847269150217
+      },
+      "S+D": {
+        "roc_auc": 0.9979676028827372,
+        "average_precision": 0.9994510332771436
+      }
+    },
+    "paired_bootstrap_differences": [
+      {
+        "experiment": "T5",
+        "cohort": "test",
+        "metric": "roc_auc",
+        "comparison": "D - S",
+        "target": "D",
+        "baseline": "S",
+        "point_difference": -0.0116867043847243,
+        "ci_lower": -0.01555379453761709,
+        "ci_upper": -0.008397024651444708,
+        "replicates": 5000,
+        "seed": 20260829,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T5",
+        "cohort": "test",
+        "metric": "average_precision",
+        "comparison": "D - S",
+        "target": "D",
+        "baseline": "S",
+        "point_difference": -0.003921275935522384,
+        "ci_lower": -0.00512482921406276,
+        "ci_upper": -0.002886619049718903,
+        "replicates": 5000,
+        "seed": 20260829,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T5",
+        "cohort": "test",
+        "metric": "roc_auc",
+        "comparison": "S+D - S",
+        "target": "S+D",
+        "baseline": "S",
+        "point_difference": -0.0005320940257291795,
+        "ci_lower": -0.0015121741766012636,
+        "ci_upper": 0.0002324122718394766,
+        "replicates": 5000,
+        "seed": 20260829,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T5",
+        "cohort": "test",
+        "metric": "average_precision",
+        "comparison": "S+D - S",
+        "target": "S+D",
+        "baseline": "S",
+        "point_difference": -0.00015496957340055406,
+        "ci_lower": -0.0004357638138027836,
+        "ci_upper": 6.098225673946132e-05,
+        "replicates": 5000,
+        "seed": 20260829,
+        "sampling": "class-stratified paired bootstrap"
+      }
+    ],
+    "metric_formulas": {
+      "roc_auc": "Area under the empirical receiver operating characteristic curve.",
+      "average_precision": "Average precision, the weighted mean of precision across recall increments.",
+      "difference": "Metric(target) minus Metric(baseline) on identical rows.",
+      "ci": "2.5th and 97.5th percentiles of class-stratified paired bootstrap differences."
+    },
+    "selection_logic": "Fit vocabularies on train only; fit models on train with validation early stopping; select one of four fusion rules by validation ROC AUC; freeze; evaluate once on test.",
+    "task_name": "validation-selected static-dynamic late fusion",
+    "no_behavior_encoding": "all-zero dynamic row",
+    "test_used_for_selection": false,
+    "source_result_sha256": "CDC47FAA1C4E82FF8B144B0D843E8463C29FA9BD425CB46A96C1E1A66B2525C4"
+  },
+  "T9_apt_6way": {
+    "script_sha256": "A43C3EABD9B0F372F60C6C9F11C2F693864B1CAFEEB1465731C7041AB48A09E3",
+    "seed": 42,
+    "model_family": "LightGBM multiclass classifier",
+    "model_parameters": {
+      "boosting_type": "gbdt",
+      "num_leaves": 64,
+      "min_data_in_leaf": 100,
+      "learning_rate": 0.05,
+      "n_estimators": 500,
+      "n_jobs": -1,
+      "verbosity": -1,
+      "objective": "multiclass",
+      "num_class": 6
+    },
+    "feature_dimension": 2568,
+    "n_train_plus_validation": 145,
+    "n_test": 32,
+    "ordered_labels": [
+      "apt_equationgroup",
+      "apt_gamaredon",
+      "apt_knotweed",
+      "apt_molerats",
+      "apt_turla",
+      "apt_other"
+    ],
+    "zero_support_policy": "labels fixed to all six classes; zero_division=0",
+    "macro_precision_six_class": 0.09375,
+    "macro_recall_six_class": 0.16666666666666666,
+    "macro_f1_six_class": 0.12,
+    "per_class": [
+      {
+        "label": "apt_equationgroup",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 2,
+        "predicted_count": 0
+      },
+      {
+        "label": "apt_gamaredon",
+        "precision": 0.5625,
+        "recall": 1.0,
+        "f1": 0.72,
+        "support": 18,
+        "predicted_count": 32
+      },
+      {
+        "label": "apt_knotweed",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 1,
+        "predicted_count": 0
+      },
+      {
+        "label": "apt_molerats",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0,
+        "predicted_count": 0
+      },
+      {
+        "label": "apt_turla",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 6,
+        "predicted_count": 0
+      },
+      {
+        "label": "apt_other",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 5,
+        "predicted_count": 0
+      }
+    ],
+    "confusion_matrix": [
+      [
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        18,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        6,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        5,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "training_sha_list_digest": "B60C4AAB6C4F89EB1FBF6B32D04CF15534A9109F94794D7F0CC341A3339CB95F",
+    "test_sha_list_digest": "7A7848BFF5D60D2D25EEE4BCC6E0617DEABC1FB50E8F020D01F79A9F5C77D17E",
+    "task_name": "exploratory weak-label APT group-tag prediction",
+    "source_result_sha256": "9BA97F62E23FE3A60E6BA6BBC2813CDCA1665DCEB796D89C349A20993F71A8BB"
+  },
+  "T15_challenge_malware_vs_test_benign": {
+    "script_sha256": "A43C3EABD9B0F372F60C6C9F11C2F693864B1CAFEEB1465731C7041AB48A09E3",
+    "model_seed": 42,
+    "frozen_fusion_rule_from_T5_validation": "wstatic0.7",
+    "selection_constraints": {
+      "training_vocabulary_only": true,
+      "model_fit_on_train_only": true,
+      "validation_for_early_stopping_and_T5_fusion_selection": true,
+      "T15_used_for_selection_or_tuning": false
+    },
+    "feature_dimensions": {
+      "static": 2568,
+      "dynamic_content": 19474,
+      "dynamic_content_plus_indicator": 19475
+    },
+    "model_best_iterations": {
+      "static": 207,
+      "dynamic_content": 141,
+      "dynamic_content_plus_indicator": 128
+    },
+    "all_sample": {
+      "n": 488,
+      "positive": 96,
+      "negative": 392,
+      "positive_prevalence": 0.19672131147540983,
+      "challenge_positive_behavior_available": 84,
+      "challenge_positive_total": 96,
+      "test_benign_behavior_available": 358,
+      "test_benign_total": 392,
+      "metrics": {
+        "S": {
+          "roc_auc": 0.8626966411564626,
+          "average_precision": 0.5217779060147617
+        },
+        "D-content": {
+          "roc_auc": 0.7607886904761906,
+          "average_precision": 0.4516082078538354
+        },
+        "S+D-content": {
+          "roc_auc": 0.8270886479591837,
+          "average_precision": 0.4576328193125208
+        },
+        "D-content+missing-indicator": {
+          "roc_auc": 0.7574936224489796,
+          "average_precision": 0.4528435106448342
+        },
+        "S+D-content+missing-indicator": {
+          "roc_auc": 0.8256802721088435,
+          "average_precision": 0.461635184613672
+        }
+      },
+      "sha_list_digest": "DE3737536F037836D34CB28D116CA11874FEF7A0A30736A452E869963AFD2AAA"
+    },
+    "behavior_complete_sensitivity": {
+      "n": 442,
+      "positive": 84,
+      "negative": 358,
+      "positive_prevalence": 0.19004524886877827,
+      "metrics": {
+        "S": {
+          "roc_auc": 0.86841580207502,
+          "average_precision": 0.5206314775924267
+        },
+        "D-content": {
+          "roc_auc": 0.7865123703112531,
+          "average_precision": 0.49697282166908296
+        },
+        "S+D-content": {
+          "roc_auc": 0.8539505187549881,
+          "average_precision": 0.48684245114650815
+        },
+        "D-content+missing-indicator": {
+          "roc_auc": 0.7807927640329874,
+          "average_precision": 0.49749314679912826
+        },
+        "S+D-content+missing-indicator": {
+          "roc_auc": 0.8518555466879489,
+          "average_precision": 0.48807035440589286
+        }
+      },
+      "sha_list_digest": "C5DE51AA72C72E07381255E1689D808426348E7118312F89AABB939B90C4AE40",
+      "interpretation_role": "sensitivity analysis only; conditioning on behavior capture may introduce selection bias"
+    },
+    "bootstrap": [
+      {
+        "experiment": "T15",
+        "cohort": "all-sample",
+        "metric": "roc_auc",
+        "comparison": "D-content - S",
+        "target": "D-content",
+        "baseline": "S",
+        "point_difference": -0.10190795068027203,
+        "ci_lower": -0.15097722682823136,
+        "ci_upper": -0.052932676977040787,
+        "replicates": 5000,
+        "seed": 20260830,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "all-sample",
+        "metric": "average_precision",
+        "comparison": "D-content - S",
+        "target": "D-content",
+        "baseline": "S",
+        "point_difference": -0.07016969816092633,
+        "ci_lower": -0.17867070043734432,
+        "ci_upper": 0.02390162102512495,
+        "replicates": 5000,
+        "seed": 20260830,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "all-sample",
+        "metric": "roc_auc",
+        "comparison": "S+D-content - S",
+        "target": "S+D-content",
+        "baseline": "S",
+        "point_difference": -0.03560799319727892,
+        "ci_lower": -0.06178318983843531,
+        "ci_upper": -0.009141156462585065,
+        "replicates": 5000,
+        "seed": 20260830,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "all-sample",
+        "metric": "average_precision",
+        "comparison": "S+D-content - S",
+        "target": "S+D-content",
+        "baseline": "S",
+        "point_difference": -0.0641450867022409,
+        "ci_lower": -0.10692984490156715,
+        "ci_upper": -0.017020367362963976,
+        "replicates": 5000,
+        "seed": 20260830,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "all-sample",
+        "metric": "roc_auc",
+        "comparison": "D-content+missing-indicator - S",
+        "target": "D-content+missing-indicator",
+        "baseline": "S",
+        "point_difference": -0.10520301870748305,
+        "ci_lower": -0.15549532312925166,
+        "ci_upper": -0.05596301020408179,
+        "replicates": 5000,
+        "seed": 20260830,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "all-sample",
+        "metric": "average_precision",
+        "comparison": "D-content+missing-indicator - S",
+        "target": "D-content+missing-indicator",
+        "baseline": "S",
+        "point_difference": -0.06893439536992751,
+        "ci_lower": -0.17713398305228148,
+        "ci_upper": 0.02602118380718381,
+        "replicates": 5000,
+        "seed": 20260830,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "all-sample",
+        "metric": "roc_auc",
+        "comparison": "S+D-content+missing-indicator - S",
+        "target": "S+D-content+missing-indicator",
+        "baseline": "S",
+        "point_difference": -0.03701636904761907,
+        "ci_lower": -0.06300754676870758,
+        "ci_upper": -0.010708306760204208,
+        "replicates": 5000,
+        "seed": 20260830,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "all-sample",
+        "metric": "average_precision",
+        "comparison": "S+D-content+missing-indicator - S",
+        "target": "S+D-content+missing-indicator",
+        "baseline": "S",
+        "point_difference": -0.06014272140108973,
+        "ci_lower": -0.10340884884602251,
+        "ci_upper": -0.011480751088103957,
+        "replicates": 5000,
+        "seed": 20260830,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "behavior-complete sensitivity",
+        "metric": "roc_auc",
+        "comparison": "D-content - S",
+        "target": "D-content",
+        "baseline": "S",
+        "point_difference": -0.08190343176376691,
+        "ci_lower": -0.13545989624900245,
+        "ci_upper": -0.03286903099228507,
+        "replicates": 5000,
+        "seed": 20260831,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "behavior-complete sensitivity",
+        "metric": "average_precision",
+        "comparison": "D-content - S",
+        "target": "D-content",
+        "baseline": "S",
+        "point_difference": -0.023658655923343708,
+        "ci_lower": -0.14102582813054554,
+        "ci_upper": 0.07641630863860945,
+        "replicates": 5000,
+        "seed": 20260831,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "behavior-complete sensitivity",
+        "metric": "roc_auc",
+        "comparison": "S+D-content - S",
+        "target": "S+D-content",
+        "baseline": "S",
+        "point_difference": -0.01446528332003194,
+        "ci_lower": -0.03940708965150308,
+        "ci_upper": 0.011174015695663722,
+        "replicates": 5000,
+        "seed": 20260831,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "behavior-complete sensitivity",
+        "metric": "average_precision",
+        "comparison": "S+D-content - S",
+        "target": "S+D-content",
+        "baseline": "S",
+        "point_difference": -0.033789026445918524,
+        "ci_lower": -0.07645074780623971,
+        "ci_upper": 0.013988273973566296,
+        "replicates": 5000,
+        "seed": 20260831,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "behavior-complete sensitivity",
+        "metric": "roc_auc",
+        "comparison": "D-content+missing-indicator - S",
+        "target": "D-content+missing-indicator",
+        "baseline": "S",
+        "point_difference": -0.08762303804203264,
+        "ci_lower": -0.1421617285182231,
+        "ci_upper": -0.0376758280127694,
+        "replicates": 5000,
+        "seed": 20260831,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "behavior-complete sensitivity",
+        "metric": "average_precision",
+        "comparison": "D-content+missing-indicator - S",
+        "target": "D-content+missing-indicator",
+        "baseline": "S",
+        "point_difference": -0.02313833079329841,
+        "ci_lower": -0.13981474546642436,
+        "ci_upper": 0.0760868312776047,
+        "replicates": 5000,
+        "seed": 20260831,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "behavior-complete sensitivity",
+        "metric": "roc_auc",
+        "comparison": "S+D-content+missing-indicator - S",
+        "target": "S+D-content+missing-indicator",
+        "baseline": "S",
+        "point_difference": -0.016560255387071066,
+        "ci_lower": -0.041800512104283094,
+        "ci_upper": 0.00924531125299281,
+        "replicates": 5000,
+        "seed": 20260831,
+        "sampling": "class-stratified paired bootstrap"
+      },
+      {
+        "experiment": "T15",
+        "cohort": "behavior-complete sensitivity",
+        "metric": "average_precision",
+        "comparison": "S+D-content+missing-indicator - S",
+        "target": "S+D-content+missing-indicator",
+        "baseline": "S",
+        "point_difference": -0.032561123186533814,
+        "ci_lower": -0.074488615519914,
+        "ci_upper": 0.015598255624083889,
+        "replicates": 5000,
+        "seed": 20260831,
+        "sampling": "class-stratified paired bootstrap"
+      }
+    ],
+    "bootstrap_replicates": 5000,
+    "bootstrap_seeds": {
+      "all_sample": 20260830,
+      "behavior_complete": 20260831
+    },
+    "metric_formulas": {
+      "primary": "Average Precision computed by sklearn.metrics.average_precision_score.",
+      "secondary": "Area under the empirical receiver operating characteristic curve.",
+      "difference": "Metric(target) minus Metric(static) on identical rows.",
+      "ci": "2.5th and 97.5th percentiles of class-stratified paired bootstrap differences."
+    },
+    "task_name": "challenge-malware versus test-benign detection",
+    "class_source_confounding": "all positives are challenge samples and all negatives are test samples",
+    "no_behavior_encoding": "all-zero dynamic row in the all-sample analysis",
+    "source_result_sha256": "7310886B5F9C8ADB2C20296B3430A8A2E5F5E4AC939F397B82B8126EF1193A94"
   }
 }

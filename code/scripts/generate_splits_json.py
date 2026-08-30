@@ -1,4 +1,4 @@
-"""Generate splits.json — per-task SHA-256 lists for all 15 benchmark tasks.
+"""Generate splits.json with per-task SHA-256 lists for all 15 benchmark tasks.
 
 Includes:
   - default            : standard train/val/test/challenge split (T1, T2, T5-T7)
@@ -20,7 +20,7 @@ import pandas as pd
 ROOT = Path(".")
 _m = ROOT / "dataset" / "manifest.csv"
 if not _m.exists():
-    _m = ROOT / "dataset" / "manifest_open.csv"   # open-tier fallback (all needed columns are in the 26)
+    _m = ROOT / "dataset" / "manifest_open.csv"   # manifest_open (all needed columns are in the 26)
 df = pd.read_csv(_m)
 print(f"Loaded manifest: {len(df):,} rows x {len(df.columns)} cols")
 
@@ -86,7 +86,7 @@ splits["T8_exploit"] = {
     "negatives": sha_list(_exploit.map(lambda xs: len(xs) == 0)),
 }
 
-# T9 APT attribution (E2 multi-class)
+# T9 exploratory weak-label group-tag prediction (E2, fixed six classes)
 splits["T9_apt"] = {
     "samples": sha_list(df["subset"] == "E2"),
 }

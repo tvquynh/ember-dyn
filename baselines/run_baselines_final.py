@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
-"""EMBER-Dyn AUTHORITATIVE Technical-Validation baseline suite (v6, final release).
+"""EMBER-Dyn technical-validation baseline suite (v1.0 protocol).
 
 ONE runner -> ONE results file, keyed by the SHIPPED task_definitions.json IDs
 (T1..T15), on the FINAL 10,000-sample release (full static coverage), with the
-CORRECTED task definitions:
+published task definitions:
 
   T1  Binary detection (static, 5 seeds)
   T2  Family 5-way (Subset A subset_class, 5 seeds)
-  T3  Concept drift (pre/post 2024-09, 5 seeds)
+  T3  Temporal separability (pre/post 2024-09, 5 seeds)
   T4  Open-set A vs B (MSP + Energy, seed 42)
   T5  Hybrid static+dynamic fusion (dynamic = summary TF-IDF (+) apistats, seed 42)
   T6  Few-shot family (Subset C episodic, seed 42)
-  T7  Non-UPX packer detection (packer field, UPX-only excluded, 5 seeds)   [CORRECTED]
-  T8  Exploit/CVE detection (exploit field non-empty, 5 seeds)              [NEW]
-  T9  APT group 6-way (Subset E2 subset_class, seed 42)                     [NEW]
+  T7  Non-UPX packer detection (packer field, UPX-only excluded, 5 seeds)
+  T8  Exploit/CVE detection (exploit field non-empty, 5 seeds)
+  T9  Exploratory weak-label group-tag prediction (fixed six classes, seed 42)
   T10 Capa multi-label  (head/mid/tail thirds, seed 42)
   T11 MITRE multi-label (head/mid/tail thirds, seed 42)
   T12 MBC multi-label   (head/mid/tail thirds, seed 42)
   T13 Per-architecture detector (Win32/Win64/Dot_Net, AUC per file_type, seed 42)
   T14 Capability-count regression (MAE, R^2, seed 42)
-  T15 Challenge OOD (challenge + test benign, PR/ROC AUC + bootstrap CI, seed 42)
+  T15 Challenge-malware versus test-benign S/D/S+D comparison (seed 42)
   Plus: TD1 dynamic-only, and model-class diversity on T1 + T7.
 
 Env: EMBER_DYN_BASELINES must point at a dir holding manifest.csv, splits.json,
@@ -117,13 +117,75 @@ def seeded_binary(ytr, yva, yte, Xtr, Xva, Xte, name):
         roc, pr, f1, proba, _ = fit_binary(ytr, yva, yte, Xtr, Xva, Xte, sd)
         rocs.append(roc); prs.append(pr); f1s.append(f1); last_proba = proba
     r = {"roc_auc_mean": float(np.mean(rocs)), "roc_auc_std": float(np.std(rocs)),
-         "pr_auc_mean": float(np.mean(prs)), "pr_auc_std": float(np.std(prs)),
+         "average_precision_mean": float(np.mean(prs)), "average_precision_std": float(np.std(prs)),
          "f1_mean": float(np.mean(f1s)), "f1_std": float(np.std(f1s)),
          "n_seeds": len(SEEDS), "n_train": int(len(ytr)), "n_test": int(len(yte)),
          "positive_rate_test": float(np.mean(yte))}
     log(f"[{name}] ROC {r['roc_auc_mean']:.4f}±{r['roc_auc_std']:.4f}  "
-        f"PR {r['pr_auc_mean']:.4f}  F1 {r['f1_mean']:.4f}  (n_test={len(yte)})")
+        f"AP {r['average_precision_mean']:.4f}  F1 {r['f1_mean']:.4f}  (n_test={len(yte)})")
     return r, last_proba
+
+
+def fusion_probability(name, static, dynamic):
+    """Apply one pre-declared late-fusion rule."""
+    if name == "mean":
+        return (static + dynamic) / 2
+    if name == "wstatic0.7":
+        return 0.7 * static + 0.3 * dynamic
+    if name == "geom":
+        return np.sqrt(np.clip(static * dynamic, 0, 1))
+    if name == "max":
+        return np.maximum(static, dynamic)
+    raise ValueError(f"Unknown fusion rule: {name}")
+
+
+def binary_metrics(y_true, probability):
+    return {
+        "roc_auc": float(roc_auc_score(y_true, probability)),
+        "average_precision": float(average_precision_score(y_true, probability)),
+    }
+
+
+def stratified_paired_bootstrap(y_true, probabilities, comparisons, replicates, seed):
+    """Return paired percentile intervals while preserving class counts."""
+    positive = np.flatnonzero(y_true == 1)
+    negative = np.flatnonzero(y_true == 0)
+    rng = np.random.default_rng(seed)
+    point = {name: binary_metrics(y_true, values) for name, values in probabilities.items()}
+    distributions = {
+        (metric, label): np.empty(replicates, dtype=float)
+        for metric in ("roc_auc", "average_precision")
+        for label, _, _ in comparisons
+    }
+    for replicate in range(replicates):
+        sampled = np.concatenate([
+            rng.choice(positive, len(positive), replace=True),
+            rng.choice(negative, len(negative), replace=True),
+        ])
+        sampled_y = y_true[sampled]
+        sampled_metrics = {
+            name: binary_metrics(sampled_y, values[sampled])
+            for name, values in probabilities.items()
+        }
+        for label, target, baseline in comparisons:
+            for metric in ("roc_auc", "average_precision"):
+                distributions[(metric, label)][replicate] = (
+                    sampled_metrics[target][metric] - sampled_metrics[baseline][metric]
+                )
+    rows = []
+    for label, target, baseline in comparisons:
+        for metric in ("roc_auc", "average_precision"):
+            values = distributions[(metric, label)]
+            rows.append({
+                "comparison": label,
+                "metric": metric,
+                "point_difference": point[target][metric] - point[baseline][metric],
+                "ci95": [float(np.percentile(values, 2.5)), float(np.percentile(values, 97.5))],
+                "replicates": replicates,
+                "seed": seed,
+                "sampling": "class-stratified paired bootstrap",
+            })
+    return rows
 
 
 # ── T1 binary ───────────────────────────────────────────────────────
@@ -156,12 +218,12 @@ results["T2_family_5way_A"] = {"macro_f1_mean": float(np.mean(f1s)), "macro_f1_s
                                "n_test": int(len(yA["test"]))}
 log(f"[T2] macro F1 {np.mean(f1s):.4f}±{np.std(f1s):.4f}  n_test={len(yA['test'])}")
 
-# ── T3 concept drift (pre/post) ─────────────────────────────────────
+# ── T3 temporal separability (pre/post) ─────────────────────────────
 tb = {s: dfs[s]["time_bucket"].map({"pre": 0, "post": 1}).astype(int).values for s in dfs}
-results["T3_concept_drift"], _ = seeded_binary(
+results["T3_temporal_separability"], _ = seeded_binary(
     tb["train"], tb["val"], tb["test"], X["train"], X["val"], X["test"], "T3")
 
-# ── T7 non-UPX packer (CORRECTED) ───────────────────────────────────
+# T7 non-UPX packer
 def packer_label(df):
     """1 = non-UPX packer present; 0 = empty; -1 = UPX-only (exclude)."""
     out = np.full(len(df), -2, dtype=int)
@@ -182,7 +244,7 @@ results["T7_packer_nonupx"], _ = seeded_binary(
 results["T7_packer_nonupx"]["n_positive_corpus"] = int(sum((pk[s] == 1).sum() for s in dfs))
 results["T7_packer_nonupx"]["n_upx_excluded_corpus"] = int(sum((pk[s] == -1).sum() for s in dfs))
 
-# ── T8 exploit (NEW) ────────────────────────────────────────────────
+# T8 exploit
 def exploit_label(df):
     return np.array([1 if to_list(c) else 0 for c in df["exploit"].tolist()], dtype=int)
 ex = {s: exploit_label(dfs[s]) for s in dfs}
@@ -206,9 +268,21 @@ if len(yE_te_df) >= 6 and yE_tr["subset_class"].nunique() >= 2:
     clf = lgb.LGBMClassifier(objective="multiclass", num_class=6, random_state=PRIMARY, **LGB)
     clf.fit(XE_tr, ytr9)
     pred9 = clf.predict(XE_te)
-    _, _, f19, _ = precision_recall_fscore_support(yte9, pred9, average="macro", zero_division=0)
-    results["T9_apt_6way"] = {"macro_f1": float(f19), "n_train": int(len(ytr9)),
-                              "n_test": int(len(yte9)), "classes": APT}
+    p9, r9, f9, s9 = precision_recall_fscore_support(
+        yte9, pred9, labels=np.arange(6), zero_division=0
+    )
+    f19 = float(np.mean(f9))
+    results["T9_apt_6way"] = {
+        "task_name": "exploratory weak-label APT group-tag prediction",
+        "macro_f1_fixed_six_class": f19,
+        "n_train": int(len(ytr9)), "n_test": int(len(yte9)),
+        "ordered_classes": APT, "zero_division": 0,
+        "per_class": [
+            {"label": APT[i], "precision": float(p9[i]), "recall": float(r9[i]),
+             "f1": float(f9[i]), "support": int(s9[i]),
+             "predicted_count": int((pred9 == i).sum())}
+            for i in range(6)
+        ]}
     log(f"[T9] macro F1 {f19:.4f}  n_train={len(ytr9)} n_test={len(yte9)}")
 else:
     results["T9_apt_6way"] = {"skipped": f"E2 test too small ({len(yE_te_df)})",
@@ -271,31 +345,6 @@ results["T14_capcount_regression"] = {"mae": float(mean_absolute_error(ycc["test
                                       "r2": float(r2_score(ycc["test"], pcc)),
                                       "mean_count_test": float(ycc["test"].mean())}
 log(f"[T14] MAE {results['T14_capcount_regression']['mae']:.3f}  R2 {results['T14_capcount_regression']['r2']:.4f}")
-
-# ── T15 challenge OOD (challenge mal + test benign) ─────────────────
-Xtv = np.vstack([X["train"], X["val"]])
-ytv = np.concatenate([yb["train"], yb["val"]])
-clf = lgb.LGBMClassifier(objective="binary", random_state=PRIMARY, **LGB)
-clf.fit(Xtv, ytv)
-mben = (dfs["test"]["label"].eq(0)).values
-Xood = np.vstack([X["challenge"], X["test"][mben]])
-yood = np.concatenate([np.ones(len(X["challenge"]), int), np.zeros(int(mben.sum()), int)])
-pood = clf.predict_proba(Xood)[:, 1]
-rng = np.random.default_rng(PRIMARY)
-boot = []
-for _ in range(1000 if not SMOKE else 30):
-    idx = rng.integers(0, len(yood), len(yood))
-    if len(set(yood[idx])) > 1:
-        boot.append(average_precision_score(yood[idx], pood[idx]))
-results["T15_challenge_ood"] = {
-    "pr_auc": float(average_precision_score(yood, pood)),
-    "roc_auc": float(roc_auc_score(yood, pood)),
-    "f1": float(f1_score(yood, (pood >= 0.5).astype(int), zero_division=0)),
-    "pr_auc_ci95": [float(np.percentile(boot, 2.5)), float(np.percentile(boot, 97.5))],
-    "n_challenge": int(len(X["challenge"])), "n_benign": int(mben.sum()),
-    "positive_rate": float(yood.mean())}
-log(f"[T15] PR AUC {results['T15_challenge_ood']['pr_auc']:.4f}  "
-    f"ROC {results['T15_challenge_ood']['roc_auc']:.4f}  CI {results['T15_challenge_ood']['pr_auc_ci95']}")
 
 # ── dynamic features (summary TF-IDF + apistats) for TD1/T5 ─────────
 log("[dyn] loading Small reports …")
@@ -366,44 +415,93 @@ clf_d.fit(Xd["train"], DY["train"][3], eval_set=[(Xd["val"], DY["val"][3])],
 proba_dyn_test = clf_d.predict_proba(Xd["test"])[:, 1]
 results["TD1_dynamic_only"] = {
     "roc_auc": float(roc_auc_score(DY["test"][3], proba_dyn_test)),
-    "pr_auc": float(average_precision_score(DY["test"][3], proba_dyn_test)),
+    "average_precision": float(average_precision_score(DY["test"][3], proba_dyn_test)),
     "f1": float(f1_score(DY["test"][3], (proba_dyn_test >= 0.5).astype(int), zero_division=0)),
-    "feat_dim": int(Xd["train"].shape[1]), "apistats_dim": len(api_vocab)}
+    "tfidf_dim": int(Td["train"].shape[1]), "apistats_dim": len(api_vocab),
+    "dynamic_total_dim": int(Xd["train"].shape[1]),
+    "vocabulary_fit_split": "train",
+    "no_behavior_encoding": "all-zero dynamic row"}
 log(f"[TD1] ROC {results['TD1_dynamic_only']['roc_auc']:.4f} (with apistats)")
 
-# ── T5 hybrid fusion (late) + bootstrap CI vs static-only ───────────
-# align test on intersection of static(test) and dynamic(test)
-st_sha = dfs["test"]["sha256"].tolist()
-st_idx = {s: i for i, s in enumerate(st_sha)}
-dy_sha = DY["test"][0]
-dy_idx = {s: i for i, s in enumerate(dy_sha)}
-common = [s for s in st_sha if s in dy_idx]
-ay = np.array([int(dfs["test"].loc[st_idx[s], "label"]) for s in common])
-a_st = np.array([proba_static_test[st_idx[s]] for s in common])  # static (seed-1011 proba ok; recompute seed42 below)
-# recompute static test proba at PRIMARY for a clean paired comparison
-_, _, _, proba_static_p42, _ = fit_binary(yb["train"], yb["val"], yb["test"],
-                                           X["train"], X["val"], X["test"], PRIMARY)
-a_st = np.array([proba_static_p42[st_idx[s]] for s in common])
-a_dy = np.array([proba_dyn_test[dy_idx[s]] for s in common])
-variants = {"mean": (a_st + a_dy) / 2, "wstatic0.7": 0.7 * a_st + 0.3 * a_dy,
-            "geom": np.sqrt(np.clip(a_st * a_dy, 0, 1)), "max": np.maximum(a_st, a_dy)}
-roc_static = roc_auc_score(ay, a_st)
-best_name = max(variants, key=lambda k: roc_auc_score(ay, variants[k]))
-best = variants[best_name]
-rng = np.random.default_rng(PRIMARY)
-diffs = []
-for _ in range(2000 if not SMOKE else 30):
-    idx = rng.integers(0, len(ay), len(ay))
-    if len(set(ay[idx])) > 1:
-        diffs.append(roc_auc_score(ay[idx], best[idx]) - roc_auc_score(ay[idx], a_st[idx]))
+# ── T5 validation-selected late fusion; test is evaluation-only ─────
+_, _, _, proba_static_test_p42, static_model = fit_binary(
+    yb["train"], yb["val"], yb["test"], X["train"], X["val"], X["test"], PRIMARY)
+proba_static_val = static_model.predict_proba(X["val"])[:, 1]
+proba_static_challenge = static_model.predict_proba(X["challenge"])[:, 1]
+proba_dyn_val = clf_d.predict_proba(Xd["val"])[:, 1]
+proba_dyn_challenge = clf_d.predict_proba(Xd["challenge"])[:, 1]
+
+fusion_names = ["mean", "wstatic0.7", "geom", "max"]
+validation_candidates = {
+    name: fusion_probability(name, proba_static_val, proba_dyn_val)
+    for name in fusion_names
+}
+validation_metrics = {
+    name: binary_metrics(yb["val"], probability)
+    for name, probability in validation_candidates.items()
+}
+selected_rule = max(fusion_names, key=lambda name: validation_metrics[name]["roc_auc"])
+frozen_test = fusion_probability(selected_rule, proba_static_test_p42, proba_dyn_test)
+t5_probabilities = {
+    "S": proba_static_test_p42,
+    "D": proba_dyn_test,
+    "S+D": frozen_test,
+}
+t5_bootstrap = stratified_paired_bootstrap(
+    yb["test"], t5_probabilities,
+    [("D - S", "D", "S"), ("S+D - S", "S+D", "S")],
+    5000 if not SMOKE else 30, 20260829)
 results["T5_hybrid_fusion"] = {
-    "roc_static_only": float(roc_static),
-    "roc_dynamic_only_aligned": float(roc_auc_score(ay, a_dy)),
-    "best_variant": best_name, "roc_best_fusion": float(roc_auc_score(ay, best)),
-    "fusion_minus_static_ci95": [float(np.percentile(diffs, 2.5)), float(np.percentile(diffs, 97.5))],
-    "n_test_aligned": int(len(common)), "variants_roc": {k: float(roc_auc_score(ay, v)) for k, v in variants.items()}}
-log(f"[T5] static {roc_static:.4f} best-fusion({best_name}) {roc_auc_score(ay, best):.4f}  "
-    f"CI {results['T5_hybrid_fusion']['fusion_minus_static_ci95']}")
+    "protocol": "train-only vocabulary; train fit with validation early stopping; validation-only fusion selection; frozen test evaluation",
+    "feature_dimensions": {"static": len(FEAT), "dynamic_tfidf": int(Td["train"].shape[1]),
+                           "dynamic_apistats": len(api_vocab), "dynamic_total": int(Xd["train"].shape[1])},
+    "model_best_iterations": {"static": int(static_model.best_iteration_), "dynamic": int(clf_d.best_iteration_)},
+    "validation_fusion_metrics": validation_metrics,
+    "selected_fusion_rule": selected_rule,
+    "test_metrics": {name: binary_metrics(yb["test"], probability)
+                     for name, probability in t5_probabilities.items()},
+    "paired_bootstrap_differences": t5_bootstrap,
+    "n_train": int(len(yb["train"])), "n_validation": int(len(yb["val"])),
+    "n_test": int(len(yb["test"])), "test_used_for_selection": False,
+    "no_behavior_encoding": "all-zero dynamic row"}
+log(f"[T5] validation selected {selected_rule}; "
+    f"test S={results['T5_hybrid_fusion']['test_metrics']['S']['roc_auc']:.4f} "
+    f"S+D={results['T5_hybrid_fusion']['test_metrics']['S+D']['roc_auc']:.4f}")
+
+# ── T15 challenge-malware versus test-benign; no T15 tuning ─────────
+mben = dfs["test"]["label"].eq(0).values
+t15_y = np.concatenate([np.ones(len(X["challenge"]), int), np.zeros(int(mben.sum()), int)])
+t15_static = np.concatenate([proba_static_challenge, proba_static_test_p42[mben]])
+t15_dynamic = np.concatenate([proba_dyn_challenge, proba_dyn_test[mben]])
+t15_fusion = fusion_probability(selected_rule, t15_static, t15_dynamic)
+t15_available = np.concatenate([
+    dfs["challenge"]["dynamic_status"].eq("behavior").values,
+    dfs["test"].loc[mben, "dynamic_status"].eq("behavior").values,
+])
+
+def t15_cohort_payload(mask, seed):
+    y = t15_y[mask]
+    probabilities = {"S": t15_static[mask], "D": t15_dynamic[mask], "S+D": t15_fusion[mask]}
+    return {
+        "n": int(len(y)), "positive": int(y.sum()), "negative": int(len(y) - y.sum()),
+        "metrics": {name: binary_metrics(y, values) for name, values in probabilities.items()},
+        "paired_bootstrap_differences": stratified_paired_bootstrap(
+            y, probabilities, [("D - S", "D", "S"), ("S+D - S", "S+D", "S")],
+            5000 if not SMOKE else 30, seed),
+    }
+
+results["T15_challenge_malware_vs_test_benign"] = {
+    "task_name": "challenge-malware versus test-benign detection",
+    "class_source_confounding": "all positives are from challenge and all negatives are from test",
+    "frozen_fusion_rule_from_T5_validation": selected_rule,
+    "T15_used_for_selection_or_tuning": False,
+    "all_sample": t15_cohort_payload(np.ones(len(t15_y), dtype=bool), 20260830),
+    "behavior_complete_sensitivity": t15_cohort_payload(t15_available, 20260831),
+    "no_behavior_encoding": "all-zero dynamic row in all-sample analysis",
+}
+log(f"[T15] all-sample AP S="
+    f"{results['T15_challenge_malware_vs_test_benign']['all_sample']['metrics']['S']['average_precision']:.4f} "
+    f"S+D={results['T15_challenge_malware_vs_test_benign']['all_sample']['metrics']['S+D']['average_precision']:.4f}")
 
 # ── T6 few-shot family (Subset C episodic) ──────────────────────────
 C_FAM = ["blackmoon", "remcos", "banload", "virut", "cobaltstrike", "ekstak", "sality", "flystudio"]
@@ -480,7 +578,7 @@ def diversity(ytr, yva, yte, Xtr, Xva, Xte, name):
     out = {}
     # LightGBM
     roc, pr, f1, _, _ = fit_binary(ytr, yva, yte, Xtr, Xva, Xte, PRIMARY)
-    out["lightgbm"] = {"roc_auc": roc, "pr_auc": pr, "f1": f1}
+    out["lightgbm"] = {"roc_auc": roc, "average_precision": pr, "f1": f1}
     try:
         import xgboost as xgb
         xc = xgb.XGBClassifier(n_estimators=400, max_depth=8, learning_rate=0.05,
@@ -489,7 +587,7 @@ def diversity(ytr, yva, yte, Xtr, Xva, Xte, name):
         xc.fit(Xtr, ytr)
         pp = xc.predict_proba(Xte)[:, 1]
         out["xgboost"] = {"roc_auc": float(roc_auc_score(yte, pp)),
-                          "pr_auc": float(average_precision_score(yte, pp)),
+                          "average_precision": float(average_precision_score(yte, pp)),
                           "f1": float(f1_score(yte, (pp >= 0.5).astype(int), zero_division=0))}
     except Exception as e:
         out["xgboost"] = {"error": str(e)[:120]}
@@ -498,7 +596,7 @@ def diversity(ytr, yva, yte, Xtr, Xva, Xte, name):
     rf.fit(Xtr, ytr)
     pp = rf.predict_proba(Xte)[:, 1]
     out["randomforest"] = {"roc_auc": float(roc_auc_score(yte, pp)),
-                           "pr_auc": float(average_precision_score(yte, pp)),
+                           "average_precision": float(average_precision_score(yte, pp)),
                            "f1": float(f1_score(yte, (pp >= 0.5).astype(int), zero_division=0))}
     try:
         from sklearn.neural_network import MLPClassifier
@@ -509,7 +607,7 @@ def diversity(ytr, yva, yte, Xtr, Xva, Xte, name):
         mlp.fit(sc.fit_transform(Xtr), ytr)
         pp = mlp.predict_proba(sc.transform(Xte))[:, 1]
         out["mlp"] = {"roc_auc": float(roc_auc_score(yte, pp)),
-                      "pr_auc": float(average_precision_score(yte, pp)),
+                      "average_precision": float(average_precision_score(yte, pp)),
                       "f1": float(f1_score(yte, (pp >= 0.5).astype(int), zero_division=0))}
     except Exception as e:
         out["mlp"] = {"error": str(e)[:120]}

@@ -1,4 +1,4 @@
-"""Phase 5 — Verify ember-dyn staging folder integrity.
+"""Phase 5: verify EMBER-Dyn staging folder integrity.
 
 Checks:
   1. PE count per dyn_split matches manifest
