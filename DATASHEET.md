@@ -220,9 +220,8 @@ Raw CAPE reports (including dropped binaries, memory dumps, pcaps) are not retai
 in the release due to storage constraints (see Limitations).
 
 **Is the preprocessing software publicly available?**
-The MIT-licensed software is maintained at `github.com/tvquynh/ember-dyn`. The
-repository is currently private and will be made public immediately before
-manuscript submission.
+Yes. The MIT-licensed software and reproducibility documentation are maintained
+at `https://github.com/tvquynh/ember-dyn`.
 
 ---
 
@@ -255,7 +254,7 @@ classifier studies.
 ## Distribution
 
 **Will the dataset be distributed?**
-The release is prepared as a single archive containing both manifests (26-column and 29-column with the
+The release is distributed as coordinated archival components containing both manifests (26-column and 29-column with the
 aggregate re-check fields), `manifest_recheck.csv`, splits, task definitions,
 static parquets, raw EMBER JSONL, annotation parquets, the Small **and** Full
 CAPE report variants, and the `failed_detonation_samples.json` artefact.
@@ -265,15 +264,12 @@ Apache-2.0 licence with attribution. See the deposit `LICENSE-CC-BY-4.0.txt` and
 `LICENSE-Apache-2.0.txt` (NOTICE) for the per-artefact licence/provenance.
 
 **How will it be distributed?**
-- The canonical archival release is associated with Zenodo DOI
-  `10.5281/zenodo.22178427`. The Zenodo record is currently a draft and will be
-  made public immediately before manuscript submission.
-- GitHub is the code and documentation host. The repository remains private
-  during preparation and will be made public before manuscript submission.
+The canonical archival release is distributed through Zenodo at
+`https://doi.org/10.5281/zenodo.22178427`. Code and documentation are maintained
+at `https://github.com/tvquynh/ember-dyn`.
 
 **When will it be distributed?**
-The Zenodo record and GitHub repository will be made public immediately before
-manuscript submission.
+The v1.0.0 release accompanies the associated manuscript submission.
 
 **Is the dataset subject to any IP-based restrictions?**
 Both licences require attribution: CC-BY-4.0 to the EMBER-Dyn authors for the
@@ -288,10 +284,8 @@ artefacts. The re-check fields are released as aggregate detection counts only
 
 **Who will support, host, and maintain the dataset?**
 The PTIT research team at the contact `quynhtv@ptit.edu.vn` and
-`thuaht@ptit.edu.vn`. The canonical archival release is associated with Zenodo
-DOI `10.5281/zenodo.22178427`. Code and documentation are maintained in the
-EMBER-Dyn GitHub repository, which is currently private and will be made public
-immediately before manuscript submission.
+`thuaht@ptit.edu.vn` maintains the release through the Zenodo archival record at
+DOI `10.5281/zenodo.22178427` and the EMBER-Dyn GitHub repository.
 
 **Will the dataset be updated?**
 The initial release is v1.0.0. We will issue patch releases for verified errors;
@@ -302,5 +296,4 @@ configurations) will be versioned as v2.x.
 The dataset contains no personal information.
 
 **Will older versions be supported?**
-The intended versioning policy uses the archival record's versioning mechanism;
-availability of older versions depends on the final author-approved deposit.
+Version history is maintained through the Zenodo archival record.

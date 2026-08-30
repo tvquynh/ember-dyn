@@ -4,8 +4,6 @@ A coordinated static-dynamic malware benchmark with capability-grounded
 annotations.
 
 **Zenodo archival DOI:** [10.5281/zenodo.22178427](https://doi.org/10.5281/zenodo.22178427).
-The Zenodo record is currently a draft. Public archival release is scheduled
-immediately before manuscript submission.
 [![EMBER-Dyn-original: CC-BY-4.0](https://img.shields.io/badge/EMBER--Dyn--original-CC--BY--4.0-green)](https://creativecommons.org/licenses/by/4.0/)
 [![EMBER2024-derived: Apache-2.0](https://img.shields.io/badge/EMBER2024--derived-Apache--2.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Code: MIT](https://img.shields.io/badge/code-MIT-orange)](LICENSE-MIT.txt)
@@ -166,11 +164,10 @@ ember-dyn/
 └── notebooks/                         6 Colab notebooks (overview + 5 quickstarts)
 ```
 
-The final compressed core archive (approximately 92 MB) and Full reports
-(approximately 3.0 GB) are prepared for the Zenodo record associated with DOI
-`10.5281/zenodo.22178427`. The draft will be published immediately before
-manuscript submission. The core uses plain Parquet/JSONL and loads with
-pandas/pyarrow.
+The canonical EMBER-Dyn v1.0.0 dataset release is archived on Zenodo at DOI
+`10.5281/zenodo.22178427`. It contains the final compressed core archive
+(approximately 92 MB) and Full reports (approximately 3.0 GB). The core uses
+plain Parquet/JSONL and loads with pandas/pyarrow.
 
 ---
 
