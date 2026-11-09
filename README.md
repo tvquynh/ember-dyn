@@ -3,7 +3,7 @@
 A coordinated static-dynamic malware benchmark with capability-grounded
 annotations.
 
-**Zenodo archival DOI:** [10.5281/zenodo.22178427](https://doi.org/10.5281/zenodo.22178427).
+**Zenodo archival DOI:** [10.5281/zenodo.24094399](https://doi.org/10.5281/zenodo.24094399).
 [![EMBER-Dyn-original: CC-BY-4.0](https://img.shields.io/badge/EMBER--Dyn--original-CC--BY--4.0-green)](https://creativecommons.org/licenses/by/4.0/)
 [![EMBER2024-derived: Apache-2.0](https://img.shields.io/badge/EMBER2024--derived-Apache--2.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Code: MIT](https://img.shields.io/badge/code-MIT-orange)](LICENSE-MIT.txt)
@@ -11,8 +11,8 @@ annotations.
 License scope is artifact-specific: EMBER-Dyn-original artifacts use
 CC-BY-4.0, EMBER2024-derived artifacts retain Apache-2.0, and code uses MIT.
 
-**Version**: v1.0.0 · **Maintainer**: Van-Quynh Trinh (`quynhtv@ptithcm.edu.vn`) ·
-**Corresponding author**: Trong-Thua Huynh (`thuaht@ptit.edu.vn`)
+**Version**: v1.0.1 · **Maintainer**: Van-Quynh Trinh (`quynhtv@ptithcm.edu.vn`) ·
+**Corresponding author**: Van-Quynh Trinh (`quynhtv@ptithcm.edu.vn`)
 
 ---
 
@@ -165,7 +165,7 @@ ember-dyn/
 ```
 
 The canonical EMBER-Dyn v1.0.0 dataset release is archived on Zenodo at DOI
-`10.5281/zenodo.22178427`. It contains the final compressed core archive
+`10.5281/zenodo.24094399`. It contains the final compressed core archive
 (approximately 95 MB) and Full reports (approximately 3.0 GB). The core uses
 plain Parquet/JSONL and loads with pandas/pyarrow.
 
@@ -384,15 +384,15 @@ evaluation in controlled environments.
 
 ```bibtex
 @dataset{trinh2026emberdyn,
-  author    = {Trinh, Van-Quynh and Huynh, Trong-Thua and
-               Huynh, De-Thu and Nguyen, Minh Thang},
+  author    = {Huynh, Trong-Thua and Huynh, De-Thu and
+               Trinh, Van-Quynh and Nguyen, Minh Thang},
   title     = {EMBER-Dyn: A Coordinated Static-Dynamic Benchmark with
                Capability-Grounded Annotations for Malware Analysis},
   year      = {2026},
   publisher = {Zenodo},
-  version   = {1.0.0},
-  doi       = {10.5281/zenodo.22178427},
-  url       = {https://doi.org/10.5281/zenodo.22178427}
+  version   = {1.0.1},
+  doi       = {10.5281/zenodo.24094399},
+  url       = {https://doi.org/10.5281/zenodo.24094399}
 }
 ```
 
@@ -416,7 +416,7 @@ Please also cite the upstream EMBER2024 paper:
 
 ## 13. Contact
 
-Corresponding author: Trong-Thua Huynh, `thuaht@ptit.edu.vn`, ORCID 0000-0003-3934-1067
+Corresponding author: Van-Quynh Trinh, `quynhtv@ptithcm.edu.vn`, ORCID 0009-0006-0514-6123
 Repository maintainer: Van-Quynh Trinh, `quynhtv@ptithcm.edu.vn`, ORCID 0009-0006-0514-6123
 
 Issues and pull requests welcome at

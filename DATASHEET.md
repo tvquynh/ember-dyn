@@ -265,7 +265,7 @@ Apache-2.0 licence with attribution. See the deposit `LICENSE-CC-BY-4.0.txt` and
 
 **How will it be distributed?**
 The canonical archival release is distributed through Zenodo at
-`https://doi.org/10.5281/zenodo.22178427`. Code and documentation are maintained
+`https://doi.org/10.5281/zenodo.24094399`. Code and documentation are maintained
 at `https://github.com/tvquynh/ember-dyn`.
 
 **When will it be distributed?**
@@ -283,9 +283,9 @@ artefacts. The re-check fields are released as aggregate detection counts only
 ## Maintenance
 
 **Who will support, host, and maintain the dataset?**
-The PTIT research team at the contact `quynhtv@ptit.edu.vn` and
+The PTIT research team at the contact `quynhtv@ptithcm.edu.vn` and
 `thuaht@ptit.edu.vn` maintains the release through the Zenodo archival record at
-DOI `10.5281/zenodo.22178427` and the EMBER-Dyn GitHub repository.
+DOI `10.5281/zenodo.24094399` and the EMBER-Dyn GitHub repository.
 
 **Will the dataset be updated?**
 The initial release is v1.0.0. We will issue patch releases for verified errors;

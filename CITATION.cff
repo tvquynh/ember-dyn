@@ -1,29 +1,29 @@
 cff-version: 1.2.0
-message: "If you use EMBER-Dyn, please cite both this dataset and the upstream EMBER2024 corpus."
+message: "If you use EMBER-Dyn, please cite both this dataset and the upstream EMBER2024 corpus. Corresponding author: Van-Quynh Trinh (quynhtv@ptithcm.edu.vn)."
 title: "EMBER-Dyn: A Coordinated Static-Dynamic Benchmark with Capability-Grounded Annotations for Malware Analysis"
 authors:
-  - family-names: Trinh
-    given-names: Van-Quynh
-    affiliation: "Information Security Technology Laboratory, Posts and Telecommunications Institute of Technology (PTIT), Vietnam"
-    email: "quynhtv@ptithcm.edu.vn"
-    orcid: "https://orcid.org/0009-0006-0514-6123"
-  - family-names: Huynh
-    given-names: De-Thu
-    affiliation: "School of Computer Science and Engineering, The Saigon International University (SIU), Vietnam"
-    email: "huynhdethu@siu.edu.vn"
-    orcid: "https://orcid.org/0000-0002-1227-0281"
   - family-names: Huynh
     given-names: Trong-Thua
     affiliation: "Information Security Technology Laboratory, Posts and Telecommunications Institute of Technology (PTIT), Vietnam"
     email: "thuaht@ptit.edu.vn"
     orcid: "https://orcid.org/0000-0003-3934-1067"
+  - family-names: Huynh
+    given-names: De-Thu
+    affiliation: "School of Computer Science and Engineering, The Saigon International University (SIU), Vietnam"
+    email: "huynhdethu@siu.edu.vn"
+    orcid: "https://orcid.org/0000-0002-1227-0281"
+  - family-names: Trinh
+    given-names: Van-Quynh
+    affiliation: "Information Security Technology Laboratory, Posts and Telecommunications Institute of Technology (PTIT), Vietnam"
+    email: "quynhtv@ptithcm.edu.vn"
+    orcid: "https://orcid.org/0009-0006-0514-6123"
   - family-names: Nguyen
     given-names: Minh Thang
     affiliation: "Faculty of Information Technology, Ho Chi Minh City University of Economics and Finance (UEF), Vietnam"
     email: "thangnm@uef.edu.vn"
     orcid: "https://orcid.org/0009-0000-0218-4470"
-version: "1.0.0"
-doi: "10.5281/zenodo.22178427"
+version: "1.0.1"
+doi: "10.5281/zenodo.24094399"
 date-released: "2026-11-10"
 license:
   - CC-BY-4.0
