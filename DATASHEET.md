@@ -19,10 +19,10 @@ Technology (PTIT), the Saigon International University (SIU), and the Ho Chi Min
 City University of Economics and Finance (UEF), Vietnam.
 
 **Who funded the dataset creation?**
-The accompanying paper does not declare a separate research grant or grant
-identifier. It acknowledges institutional support with the statement: "This
-research was supported by the Posts and Telecommunications Institute of
-Technology (PTIT), Vietnam."
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+Acknowledgments
+This work was supported by the Posts and Telecommunications Institute of Technology (PTIT), Vietnam.
 
 ---
 

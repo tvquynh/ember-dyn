@@ -7,8 +7,8 @@ Usage:
 
 Re-runs checksum, manifest-count, parquet-schema, annotation-count,
 split-coverage, and PII-residual checks directly on the released files. Exits
-non-zero on any failure. Every released file (including the Full reports under
-dynamic/full) is checksum-verified against checksums.sha256. The Small dynamic
+non-zero on any failure. Files listed in the core checksums.sha256 are verified here. The separately
+downloaded Full archives have deposit-level checksums in ZENODO_UPLOAD_SHA256.txt. The Small dynamic
 reports are scanned for analyzer-account / guest-SID residual
 (separator-agnostic); pass --deep to also content-scan the multi-GB Full
 reports.
@@ -57,10 +57,13 @@ def main(root_str: str, deep: bool = False) -> int:
     if cs.exists():
         bad = []
         for line in cs.read_text(encoding="utf-8").splitlines():
-            if " *" not in line:
+            fields = line.split(maxsplit=1)
+            if len(fields) != 2:
+                bad.append("malformed checksum entry")
                 continue
-            digest, rel = line.split(" *", 1)
-            fp = root / rel.lstrip("./")
+            digest, rel = fields
+            rel = rel.removeprefix("*").removeprefix("./")
+            fp = root / rel
             if not fp.exists() or sha256_file(fp) != digest.strip():
                 bad.append(rel)
         chk("checksums.sha256 verifies", not bad, f"{len(bad)} mismatched/missing")

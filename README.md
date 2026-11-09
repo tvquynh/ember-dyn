@@ -11,7 +11,7 @@ annotations.
 License scope is artifact-specific: EMBER-Dyn-original artifacts use
 CC-BY-4.0, EMBER2024-derived artifacts retain Apache-2.0, and code uses MIT.
 
-**Version**: v1.0.0 · **Maintainer**: Van-Quynh Trinh (`quynhtv@ptit.edu.vn`) ·
+**Version**: v1.0.0 · **Maintainer**: Van-Quynh Trinh (`quynhtv@ptithcm.edu.vn`) ·
 **Corresponding author**: Trong-Thua Huynh (`thuaht@ptit.edu.vn`)
 
 ---
@@ -55,7 +55,7 @@ missing dependency or environment mismatch.
 | Static parquet coverage | 10,000 / 10,000 (100%) |
 | Dynamic observed-content coverage | 9,086 / 10,000 (90.86%); flagged by `dynamic_status` |
 | Annotation parquets | 4 (capa, MITRE, MBC, APT) |
-| Compressed size | final compressed core archive ~92 MB · Full dynamic reports ~3.0 GB |
+| Compressed size | final compressed core archive ~95 MB · Full dynamic reports ~3.0 GB |
 | Benchmark tasks predefined | 15 in `task_definitions.json` |
 
 ---
@@ -166,7 +166,7 @@ ember-dyn/
 
 The canonical EMBER-Dyn v1.0.0 dataset release is archived on Zenodo at DOI
 `10.5281/zenodo.22178427`. It contains the final compressed core archive
-(approximately 92 MB) and Full reports (approximately 3.0 GB). The core uses
+(approximately 95 MB) and Full reports (approximately 3.0 GB). The core uses
 plain Parquet/JSONL and loads with pandas/pyarrow.
 
 ---
@@ -417,7 +417,7 @@ Please also cite the upstream EMBER2024 paper:
 ## 13. Contact
 
 Corresponding author: Trong-Thua Huynh, `thuaht@ptit.edu.vn`, ORCID 0000-0003-3934-1067
-Repository maintainer: Van-Quynh Trinh, `quynhtv@ptit.edu.vn`, ORCID 0009-0006-0514-6123
+Repository maintainer: Van-Quynh Trinh, `quynhtv@ptithcm.edu.vn`, ORCID 0009-0006-0514-6123
 
 Issues and pull requests welcome at
 <https://github.com/tvquynh/ember-dyn/issues>.
